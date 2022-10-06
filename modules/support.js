@@ -37,5 +37,5 @@ export const isObject = (obj) => {
 };
 
 export function isUserDataInLocalStorage() {
-  sessionStorage.key('userData')?true:false;
+  return localStorage.getItem('userData') ? true : false;
 }

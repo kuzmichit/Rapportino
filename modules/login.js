@@ -5,9 +5,9 @@ export function getForm() {
   btnGhost.addEventListener('pointerdown', btnLoginHandler);
 }
 
-function UserData(name, pass) {
-  this.name = name,
-  this.pass = pass;
+function UserData(email, password) {
+  this.email = email,
+  this.password = password;
 }
 
 function saveUserDataInSessionStorage(userData) {

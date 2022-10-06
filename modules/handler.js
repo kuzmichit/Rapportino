@@ -77,7 +77,6 @@ export class MainHandler {
     
     if(isUserDataInLocalStorage() ) {
       onBtnRegisterFormHandler(this.currentDate, evt);
-      console.log(777);
     }
     else {
       evt.target.style.display = 'none';
