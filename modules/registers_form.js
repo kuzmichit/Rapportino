@@ -5,7 +5,8 @@ export function onBtnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form;
   const userData = JSON.parse(localStorage.getItem('userData') );
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, workForm);
-  putScheduleInDatabase(userData, dataForSaveInDatabase);
+ // putScheduleInDatabase(userData, dataForSaveInDatabase);
+ saveDataInLocalStorage(dataForSaveInDatabase);
 }
 
 function CreateObjectForDatabase(currentDate, form) {
@@ -37,12 +38,13 @@ function authWithEmailAndPassword(userData) {
 }
 
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
+  console.log(11)
   authWithEmailAndPassword(userData)
-    .then(response => console.log(response) )
+  .catch(err => console.log(err))
     .then(idToken => {
-      if (!idToken) { return console.log(Error.message); }
+      //if (!idToken) { return console.log(Error.message); }
       
-      return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
+      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
         {
           method: 'PATCH',
           body: JSON.stringify(dataForSaveInDatabase),
@@ -50,9 +52,11 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
             'Content-Type': 'application/json'
           }
         }
-      ); 
+      )
+      .catch(error => console.log(error))
     } )
-    .then(response => response.status);
+    .then(response => response)
+   // .catch(error => console.log(error.message));
 };
 
 function getScheduleFromDatabase(email, password) {
@@ -62,3 +66,13 @@ function getScheduleFromDatabase(email, password) {
     .then(response => response.json() )
     .then(console.log);
 }
+
+function saveDataInLocalStorage(data) {
+ const currentRapportino = getRapportinoFromLocal()
+  localStorage.setItem('1', 'her');
+} 
+
+function getRapportinoFromLocal() {
+  return localStorage.getItem('rapportino');
+}
+
