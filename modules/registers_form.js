@@ -5,8 +5,8 @@ export function onBtnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form;
   const userData = JSON.parse(localStorage.getItem('userData') );
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, workForm);
- // putScheduleInDatabase(userData, dataForSaveInDatabase);
- saveDataInLocalStorage(dataForSaveInDatabase);
+ putScheduleInDatabase(userData, dataForSaveInDatabase);
+ //saveDataInLocalStorage(dataForSaveInDatabase);
 }
 
 function CreateObjectForDatabase(currentDate, form) {
