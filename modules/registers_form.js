@@ -1,12 +1,10 @@
-//import {renderModalSignIn} from './renders.js';
-//import {renderModalSignIn} from './renders.js';
 
 export function onBtnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form;
   const userData = JSON.parse(localStorage.getItem('userData') );
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, workForm);
- putScheduleInDatabase(userData, dataForSaveInDatabase);
- //saveDataInLocalStorage(dataForSaveInDatabase);
+  putScheduleInDatabase(userData, dataForSaveInDatabase);
+  //saveDataInLocalStorage(dataForSaveInDatabase);
 }
 
 function CreateObjectForDatabase(currentDate, form) {
@@ -38,9 +36,9 @@ function authWithEmailAndPassword(userData) {
 }
 
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
-  console.log(11)
+  console.log(11);
   authWithEmailAndPassword(userData)
-  .catch(err => console.log(err))
+    .catch(err => console.log(err) )
     .then(idToken => {
       //if (!idToken) { return console.log(Error.message); }
       
@@ -53,10 +51,10 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
           }
         }
       )
-      .catch(error => console.log(error))
+        .catch(error => console.log(error) );
     } )
-    .then(response => response)
-   // .catch(error => console.log(error.message));
+    .then(response => response);
+  // .catch(error => console.log(error.message));
 };
 
 function getScheduleFromDatabase(email, password) {
@@ -68,7 +66,7 @@ function getScheduleFromDatabase(email, password) {
 }
 
 function saveDataInLocalStorage(data) {
- const currentRapportino = getRapportinoFromLocal()
+  const currentRapportino = getRapportinoFromLocal();
   localStorage.setItem('1', 'her');
 } 
 
