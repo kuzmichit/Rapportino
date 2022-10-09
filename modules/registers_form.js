@@ -1,15 +1,17 @@
-
 export function onBtnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form;
   const userData = JSON.parse(localStorage.getItem('userData') );
-  const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, workForm);
-  putScheduleInDatabase(userData, dataForSaveInDatabase);
-  //saveDataInLocalStorage(dataForSaveInDatabase);
+  let workHours = workForm.querySelector('.item_checked').textContent || workForm.querySelector('.input__hour' || alert('Inserire le ore di lavoro') );
+  const dataForSaveInDatabase = new CreateObjectForDatabase(workHours, currentDate, workForm);
+  //putScheduleInDatabase(userData, dataForSaveInDatabase);
+  //saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
+  console.log(dataForSaveInDatabase);
 }
 
-function CreateObjectForDatabase(currentDate, form) {
+function CreateObjectForDatabase(workHours, currentDate, form) {
   this[`${currentDate}`] =
       {
+        workHours,
         building: form.building.value,
         description: form.description.value
       };
@@ -22,7 +24,7 @@ function authWithEmailAndPassword(userData) {
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
     body: JSON.stringify( {
-      email:userData.emai,
+      email:userData.email,
       password: userData.password,
       returnSecureToken: true
     } ) ,
@@ -65,10 +67,14 @@ function getScheduleFromDatabase(email, password) {
     .then(console.log);
 }
 
-function saveDataInLocalStorage(data) {
-  const currentRapportino = getRapportinoFromLocal();
-  localStorage.setItem('1', 'her');
-} 
+function saveDataInLocalStorage(data, currentDate) {
+  let rapportino = localStorage.getItem('rapportino');
+
+  if (rapportino === null) localStorage.setItem('rapportino', '{}');
+  else rapportino = JSON.parse(localStorage.getItem('rapportino') );
+  rapportino[currentDate] = data;
+  localStorage.setItem('rapportino', JSON.stringify(rapportino) );
+	 } 
 
 function getRapportinoFromLocal() {
   return localStorage.getItem('rapportino');
