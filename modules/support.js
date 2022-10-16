@@ -39,3 +39,7 @@ export const isObject = (obj) => {
 export function isUserDataInLocalStorage() {
   return localStorage.getItem('userData') ? true : false;
 }
+
+export function isValid(str, regExp=/^\w{6,}$/) {
+  return regExp.test(str)?true:false        
+  }

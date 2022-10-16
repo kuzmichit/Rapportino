@@ -1,19 +1,25 @@
-//import {renderModalSignIn} from './renders.js';
+import {isValid} from './support.js';
 //import {renderModalSignIn} from './renders.js';
 
 export function onBtnRegisterFormHandler(currentDate, evt) {
-  const workForm = evt.target.form;
-  const userData = JSON.parse(localStorage.getItem('userData') );
-  const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, workForm);
+  const workForm = evt.target.form,
+        building = workForm.building.value,
+        description = workForm.description.value,
+        userData = JSON.parse(localStorage.getItem('userData') ),
+        dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description);
+
+  if(!isValid(building)) {alert('Inserire il nome di cantiere valido'); return}
+  if(!isValid(description, /\w{15,}/)) {alert('Inserire il lavoro svolto valido'); return}
+
  //putScheduleInDatabase(userData, dataForSaveInDatabase);
  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
 }
 
-function CreateObjectForDatabase(currentDate, form) {
+function CreateObjectForDatabase(currentDate, building, description) {
   this[`${currentDate}`] =
       {
-        building: form.building.value,
-        description: form.description.value
+        building,
+        description
       };
 }
 
@@ -24,7 +30,7 @@ function authWithEmailAndPassword(userData) {
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
     body: JSON.stringify( {
-      email:userData.emai,
+      email:userData.email,
       password: userData.password,
       returnSecureToken: true
     } ) ,
@@ -38,8 +44,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
-  console.log(11)
-  authWithEmailAndPassword(userData)
+   authWithEmailAndPassword(userData)
      .then(idToken => {
       //if (!idToken) { return console.log(Error.message); }
       
@@ -67,10 +72,7 @@ function getScheduleFromDatabase(email, password) {
 }
 
 function saveDataInLocalStorage(data, currentDate) {
- const currentRapportino = getRapportinoFromLocal()
- debugger;
- currentRapportino.currentDate = currentDate;
- debugger;
+  currentRapportino.currentDate = currentDate;
   localStorage.setItem('rapportino', 'currentRapportino');
 } 
 
