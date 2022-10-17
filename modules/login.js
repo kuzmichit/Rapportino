@@ -1,3 +1,4 @@
+import {validate} from './support.js'
 export function getForm() {
 
   const formLogin = document.getElementById('login-form');
@@ -17,15 +18,17 @@ function saveUserDataInSessionStorage(userData) {
 function btnLoginHandler() {
 
   const formLogin = document.getElementById('login-form');
-  let userData = new UserData(formLogin.email.value, formLogin.password.value);
+  let email = formLogin.email.value,
+      password = formLogin.password.value,
+      expForMail = /(^\w+)@(\w+)\.[A-Za-z]{2,3}$/;
+  
+  if(!validate(email, expForMail)) {console.log(1111); return}
+  if(validate(password)) console.log(222);
+  let userData = new UserData(email, password);
   saveUserDataInSessionStorage(userData);
   
-  if(formLogin.email.value === '' || formLogin.password.value==='') {
-    return; 
-  }
   document.querySelector('.submit__button').style.display = '';
   document.querySelector('.modal__container').style.display = 'none';
   document.querySelector('.main__container').style = 'filter: blur(0)';
   
 }
-
