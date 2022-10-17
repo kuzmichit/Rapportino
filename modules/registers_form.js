@@ -1,5 +1,4 @@
 import {isValid} from './support.js';
-//import {renderModalSignIn} from './renders.js';
 
 export function onBtnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form,
@@ -46,6 +45,7 @@ function authWithEmailAndPassword(userData) {
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
    authWithEmailAndPassword(userData)
      .then(idToken => {
+
       //if (!idToken) { return console.log(Error.message); }
       
       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
@@ -58,9 +58,11 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
         }
       )
       //.catch(error => console.log(error))
+
+
     } )
-    .then(response => response)
-   // .catch(error => console.log(error.message));
+    .then(response => response);
+  // .catch(error => console.log(error.message));
 };
 
 function getScheduleFromDatabase(email, password) {
@@ -72,9 +74,14 @@ function getScheduleFromDatabase(email, password) {
 }
 
 function saveDataInLocalStorage(data, currentDate) {
-  currentRapportino.currentDate = currentDate;
-  localStorage.setItem('rapportino', 'currentRapportino');
-} 
+
+  let rapportino = localStorage.getItem('rapportino');
+
+  if (rapportino === null) localStorage.setItem('rapportino', '{}');
+  else rapportino = JSON.parse(localStorage.getItem('rapportino') );
+  rapportino[currentDate] = data;
+  localStorage.setItem('rapportino', JSON.stringify(rapportino) );
+	 } 
 
 function getRapportinoFromLocal() {
   if(!localStorage.getItem('rapportino')) localStorage.setItem('rapportino', '{}');

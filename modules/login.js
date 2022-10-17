@@ -1,11 +1,8 @@
 import { isValid } from "./support.js";
 
-export function getForm() {
-
   const formLogin = document.getElementById('login-form');
   let btnGhost = formLogin['btn-ghost'];
   btnGhost.addEventListener('pointerdown', btnLoginHandler);
-}
 
 function UserData(email, password) {
   this.email = email,
@@ -29,12 +26,8 @@ function btnLoginHandler() {
   let userData = new UserData(email, password);
   saveUserDataInSessionStorage(userData);
   
-  if(formLogin.email.value === '' || formLogin.password.value==='') {
-    return; 
-  }
   document.querySelector('.submit__button').style.display = '';
   document.querySelector('.modal__container').style.display = 'none';
   document.querySelector('.main__container').style = 'filter: blur(0)';
   
 }
-

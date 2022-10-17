@@ -2,11 +2,12 @@ import { camellizeClass, isObject, deleteNode, isUserDataInLocalStorage} from '.
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
 import {onBtnRegisterFormHandler} from './registers_form.js';
-import { getForm } from './login.js';
+// import { getForm } from './login.js';
+
 
 export class MainHandler {
   
-  mainContainer=document.querySelector('.main__container');
+  // mainContainer=document.querySelector('.main__container');
  
   constructor(date, elems) {
     this.elems = elems;
