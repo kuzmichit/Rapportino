@@ -1,24 +1,28 @@
 import {isValid} from './support.js';
 
-export function onBtnRegisterFormHandler(currentDate, evt) {
+export function btnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form,
         building = workForm.building.value,
         description = workForm.description.value,
-        userData = JSON.parse(localStorage.getItem('userData') ),
-        dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description);
+        userData = JSON.parse(localStorage.getItem('userData') ),        
+        workedHour = workForm.querySelector('.item_checked');
 
-  if(!isValid(building)) {alert('Inserire il nome di cantiere valido'); return}
-  if(!isValid(description, /(\w|\s){15,}/)) {alert('Inserire il lavoro svolto valido'); return}
-
- //putScheduleInDatabase(userData, dataForSaveInDatabase);
+if(!workedHour) {alert('Scegli le ore effettuate'); return};
+if(!isValid(building)) {alert('Inserire il nome di cantiere valido'); return}
+if(!isValid(description, /(\w|\s){10,}/)) {alert('Inserire il lavoro svolto valido'); return}
+      
+const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
+  
+//  putScheduleInDatabase(userData, dataForSaveInDatabase);
  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
 }
 
-function CreateObjectForDatabase(currentDate, building, description) {
+function CreateObjectForDatabase(currentDate, building, description, workedHour) {
   this[`${currentDate}`] =
       {
         building,
-        description
+        description,
+        workedHour
       };
 }
 
@@ -78,7 +82,7 @@ function saveDataInLocalStorage(data, currentDate) {
   let rapportino = localStorage.getItem('rapportino');
 
   if (rapportino === null) localStorage.setItem('rapportino', '{}');
-  else rapportino = JSON.parse(localStorage.getItem('rapportino') );
+  rapportino = JSON.parse(localStorage.getItem('rapportino') );
   rapportino[currentDate] = data;
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 	 } 

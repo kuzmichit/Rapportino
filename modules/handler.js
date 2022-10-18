@@ -1,7 +1,7 @@
 import { camellizeClass, isObject, deleteNode, isUserDataInLocalStorage} from './support.js';
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
-import {onBtnRegisterFormHandler} from './registers_form.js';
+import {btnRegisterFormHandler} from './registers_form.js';
 import { initLoginForm } from './login.js';
 
 
@@ -77,7 +77,7 @@ export class MainHandler {
   submitButton(evt) {
     
     if(isUserDataInLocalStorage() ) {
-      onBtnRegisterFormHandler(this.currentDate, evt);
+      btnRegisterFormHandler(this.currentDate, evt);
     }
     else {
       evt.target.style.display = 'none';
