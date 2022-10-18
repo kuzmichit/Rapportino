@@ -8,7 +8,7 @@ export function onBtnRegisterFormHandler(currentDate, evt) {
         dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description);
 
   if(!isValid(building)) {alert('Inserire il nome di cantiere valido'); return}
-  if(!isValid(description, /\w{15,}/)) {alert('Inserire il lavoro svolto valido'); return}
+  if(!isValid(description, /(\w|\s){15,}/)) {alert('Inserire il lavoro svolto valido'); return}
 
  //putScheduleInDatabase(userData, dataForSaveInDatabase);
  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
