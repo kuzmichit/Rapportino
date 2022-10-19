@@ -1,4 +1,4 @@
-import { isValid } from "./support.js";
+import { isValid } from './support.js';
 
 export function initLoginForm() {
 
@@ -19,12 +19,20 @@ function saveUserDataInSessionStorage(userData) {
 function btnLoginHandler() {
 
   const formLogin = document.getElementById('login-form'),
-        email = formLogin.email.value,
-        password = formLogin.password.value,
-        expForEmail = /(^\w+)@(\w+)\.[A-Za-z]{2,3}$/;
+    email = formLogin.email.value,
+    password = formLogin.password.value,
+    expForEmail = /(^\w+)@(\w+)\.[A-Za-z]{2,3}$/;
 
-  if(!isValid(email, expForEmail)) {alert(`L'email non valida`); return}
-  if(!isValid(password)) {alert(`La password non valida`); return}
+  if(!isValid(email, expForEmail) ) {
+    alert('L\'email non valida');
+
+    return;
+  }
+  if(!isValid(password) ) {
+    alert('La password non valida');
+
+    return;
+  }
 
   let userData = new UserData(email, password);
   saveUserDataInSessionStorage(userData);

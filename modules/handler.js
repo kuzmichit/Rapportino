@@ -2,9 +2,7 @@ import { camellizeClass, isObject, deleteNode, isUserDataInLocalStorage} from '.
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
 import {btnRegisterFormHandler} from './registers_form.js';
-import { initLoginForm } from './login.js';
-
-
+// import { initLoginForm } from './login.js';
 export class MainHandler {
   
   // mainContainer=document.querySelector('.main__container');
@@ -82,7 +80,6 @@ export class MainHandler {
     else {
       evt.target.style.display = 'none';
       renderModalSignIn();
-      initLoginForm();
     } 
   }
 }

@@ -1,20 +1,33 @@
 import {isValid} from './support.js';
+import { renderModalSignIn } from './renders.js';
 
 export function btnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form,
-        building = workForm.building.value,
-        description = workForm.description.value,
-        userData = JSON.parse(localStorage.getItem('userData') ),        
-        workedHour = workForm.querySelector('.item_checked');
+    building = workForm.building.value,
+    description = workForm.description.value,
+    userData = JSON.parse(localStorage.getItem('userData') ),        
+    workedHour = workForm.querySelector('.item_checked');
 
-if(!workedHour) {alert('Scegli le ore effettuate'); return};
-if(!isValid(building)) {alert('Inserire il nome di cantiere valido'); return}
-if(!isValid(description, /(\w|\s){10,}/)) {alert('Inserire il lavoro svolto valido'); return}
+  if(!workedHour) {
+    alert('Scegli le ore effettuate');
+
+    return;
+  }
+  if(!isValid(building) ) {
+    alert('Inserire il nome di cantiere valido');
+
+    return;
+  }
+  if(!isValid(description, /(\w|\s){10,}/) ) {
+    alert('Inserire il lavoro svolto valido');
+
+    return;
+  }
       
-const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
+  const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
   
-//  putScheduleInDatabase(userData, dataForSaveInDatabase);
- saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
+  putScheduleInDatabase(userData, dataForSaveInDatabase);
+  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
 }
 
 function CreateObjectForDatabase(currentDate, building, description, workedHour) {
@@ -27,8 +40,7 @@ function CreateObjectForDatabase(currentDate, building, description, workedHour)
 }
 
 function authWithEmailAndPassword(userData) {
-  const apiKey = 'AIzaSyDMLR1XYP9NpvZbXZbBxBLEWB1Ssx528ms'
-  ;
+  const apiKey = 'AIzaSyDMLR1XYP9NpvZbXZbBxBLEWB1Ssx528ms';
 
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
@@ -42,29 +54,58 @@ function authWithEmailAndPassword(userData) {
     }
   } )
     .then(response => response.json() )
-    .then(data => data.idToken);
+    .then(error => {
+      if(error) {
+        switch (error.error.message) {
+        case 'EMAIL_NOT_FOUND':
+          alert('La email non corretta, inserire nuovamente');
+          renderModalSignIn();
+          break;      
+        case 'INVALID_PASSWORD':
+          alert('La password non corretta, inserire nuovamente');
+          renderModalSignIn();
+          break;
+        case ' "TOO_MANY_ATTEMPTS_TRY_LATER':
+          alert('Fatti troppi tentativi, devi riprovare più tardi');
+          break;
+        default: 
+          alert('Errore generico prova a rifare più tardi');
+        }
+        
+        //return rejected(error);
+      } 
+    }
+    )
+    
+    /**
+     * Implementare Promise reject
+     */
+    .then(data => data.idToken)
+    .catch(error => console.log(error) );
 
 }
 
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
-   authWithEmailAndPassword(userData)
-     .then(idToken => {
-
-      //if (!idToken) { return console.log(Error.message); }
+  authWithEmailAndPassword(userData)
+  //.then(idToken => {
+    .then(response => response.json() )
+    .then(console.log);
+        
+  //})
+  //if (!idToken) { return console.log(Error.message); }
       
-      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(dataForSaveInDatabase),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      //.catch(error => console.log(error))
+  fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(dataForSaveInDatabase),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+  //.catch(error => console.log(error))
 
-
-    } )
+    // } )
     .then(response => response);
   // .catch(error => console.log(error.message));
 };
@@ -88,7 +129,8 @@ function saveDataInLocalStorage(data, currentDate) {
 	 } 
 
 function getRapportinoFromLocal() {
-  if(!localStorage.getItem('rapportino')) localStorage.setItem('rapportino', '{}');
+  if(!localStorage.getItem('rapportino') ) localStorage.setItem('rapportino', '{}');
+  
   return localStorage.getItem('rapportino');
 }
 
