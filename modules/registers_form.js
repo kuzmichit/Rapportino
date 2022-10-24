@@ -1,4 +1,4 @@
-import {isValid} from './support.js';
+import {isValid, showError} from './support.js';
 import { renderModalSignIn } from './renders.js';
 
 export function btnRegisterFormHandler(currentDate, evt) {
@@ -26,8 +26,8 @@ export function btnRegisterFormHandler(currentDate, evt) {
       
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
   
-  putScheduleInDatabase(userData, dataForSaveInDatabase);
   saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
+  putScheduleInDatabase(userData, dataForSaveInDatabase);
 }
 
 function CreateObjectForDatabase(currentDate, building, description, workedHour) {
@@ -54,60 +54,49 @@ function authWithEmailAndPassword(userData) {
     }
   } )
     .then(response => response.json() )
-    .then(error => {
-      if(error) {
-        switch (error.error.message) {
-        case 'EMAIL_NOT_FOUND':
-          alert('La email non corretta, inserire nuovamente');
-          renderModalSignIn();
-          break;      
-        case 'INVALID_PASSWORD':
-          alert('La password non corretta, inserire nuovamente');
-          renderModalSignIn();
-          break;
-        case ' "TOO_MANY_ATTEMPTS_TRY_LATER':
-          alert('Fatti troppi tentativi, devi riprovare più tardi');
-          break;
-        default: 
-          alert('Errore generico prova a rifare più tardi');
-        }
-        
-        //return rejected(error);
+    .then(response => {
+      if(response.error) throw response.error;
+
+      return response;
+    } 
+    )
+  /**
+     *Aggiungere renderModalSignIn in catch
+    //  */
+    .then(data => data.idToken)
+
+    .catch(error => {
+      if(400 <= error.code && 500 > error.code) {
+        showError(error.message);
+        renderModalSignIn();
       } 
     }
-    )
-    
-    /**
-     * Implementare Promise reject
-     */
-    .then(data => data.idToken)
-    .catch(error => console.log(error) );
-
+    );
 }
 
 const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
   authWithEmailAndPassword(userData)
-  //.then(idToken => {
-    .then(response => response.json() )
-    .then(console.log);
-        
-  //})
-  //if (!idToken) { return console.log(Error.message); }
+    .then(idToken => {
+    //.then(response => response.json() )
+       
+      //})
+      //if (!idToken) { return console.log(Error.message); }
       
-  fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
-    {
-      method: 'PATCH',
-      body: JSON.stringify(dataForSaveInDatabase),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-  )
-  //.catch(error => console.log(error))
+      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(dataForSaveInDatabase),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      //.catch(error => console.log(error))
 
-    // } )
-    .then(response => response);
-  // .catch(error => console.log(error.message));
+      // } )
+        .then(response => response.json() );
+      // .catch(error => console.log(error.message));
+    } ); 
 };
 
 function getScheduleFromDatabase(email, password) {
@@ -126,7 +115,7 @@ function saveDataInLocalStorage(data, currentDate) {
   rapportino = JSON.parse(localStorage.getItem('rapportino') );
   rapportino[currentDate] = data;
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
-	 } 
+} 
 
 function getRapportinoFromLocal() {
   if(!localStorage.getItem('rapportino') ) localStorage.setItem('rapportino', '{}');

@@ -40,6 +40,23 @@ export function isUserDataInLocalStorage() {
 }
 
 export function isValid(str, regExp=/^\w{6,}$/) {
-  return regExp.test(str)?true:false        
-  }
+  return regExp.test(str)?true:false;        
+}
 
+export function showError(message) {
+
+  switch (message) {
+  case 'EMAIL_NOT_FOUND':
+    alert('La email non corretta, inserire nuovamente');
+    break;      
+  case 'INVALID_PASSWORD':
+    alert('La password non corretta, inserire nuovamente');
+
+    break;
+  case ' "TOO_MANY_ATTEMPTS_TRY_LATER':
+    alert('Fatti troppi tentativi, devi riprovare più tardi');
+    break;
+  default: 
+    alert('Errore generico prova a rifare più tardi');
+  }
+}
