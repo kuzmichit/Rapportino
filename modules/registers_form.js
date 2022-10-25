@@ -27,7 +27,7 @@ export function btnRegisterFormHandler(currentDate, evt) {
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
   
   saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
-  putScheduleInDatabase(userData, dataForSaveInDatabase);
+  putScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
 }
 
 function CreateObjectForDatabase(currentDate, building, description, workedHour) {
@@ -60,12 +60,9 @@ function authWithEmailAndPassword(userData) {
       return response;
     } 
     )
-  /**
-     *Aggiungere renderModalSignIn in catch
-    //  */
     .then(data => data.idToken)
-
     .catch(error => {
+
       if(400 <= error.code && 500 > error.code) {
         showError(error.message);
         renderModalSignIn();
@@ -74,13 +71,9 @@ function authWithEmailAndPassword(userData) {
     );
 }
 
-const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
+const putScheduleInDatabase = (userData, dataForSaveInDatabase, currentDate) => {
   authWithEmailAndPassword(userData)
     .then(idToken => {
-    //.then(response => response.json() )
-       
-      //})
-      //if (!idToken) { return console.log(Error.message); }
       
       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
         {
@@ -91,11 +84,10 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
           }
         }
       )
-      //.catch(error => console.log(error))
-
-      // } )
-        .then(response => response.json() );
-      // .catch(error => console.log(error.message));
+        .then(response => response.json() )
+        .then(result => alert(result) )
+				
+      	.catch(error => console.log(error.message) );
     } ); 
 };
 
