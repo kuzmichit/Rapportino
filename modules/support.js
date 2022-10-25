@@ -39,7 +39,7 @@ export function isUserDataInLocalStorage() {
   return localStorage.getItem('userData') ? true : false;
 }
 
-export function isValid(str, regExp=/^\w{6,}$/) {
+export function isValid(str, regExp = /(\w+\b){1,}/g) {
   return regExp.test(str)?true:false;        
 }
 

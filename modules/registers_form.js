@@ -85,9 +85,12 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase, currentDate) => 
         }
       )
         .then(response => response.json() )
-        .then(result => alert(result) )
-				
-      	.catch(error => console.log(error.message) );
+        .then(result => {
+          let date = Object.keys(result)[0];
+          alert('La scheda del ' + date + ' è stata inserita');
+        }
+        )
+        .catch(error => console.log(error.message) );
     } ); 
 };
 
