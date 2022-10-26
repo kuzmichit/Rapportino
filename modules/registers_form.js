@@ -1,4 +1,4 @@
-import {isValid, showError} from './support.js';
+import {isValid, showError, dateFormat} from './support.js';
 import { renderModalSignIn } from './renders.js';
 
 export function btnRegisterFormHandler(currentDate, evt) {
@@ -13,20 +13,19 @@ export function btnRegisterFormHandler(currentDate, evt) {
 
     return;
   }
-  if(!isValid(building) ) {
+  else if(!isValid(building) ) {
     alert('Inserire il nome di cantiere valido');
 
     return;
   }
-  if(!isValid(description, /(\w|\s){10,}/) ) {
+  else if(!isValid(description, /(\w|\s){10,}/) ) {
     alert('Inserire il lavoro svolto valido');
 
     return;
   }
       
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
-  
-  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
+  debugger;
   putScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
 }
 
@@ -86,7 +85,7 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase, currentDate) => 
       )
         .then(response => response.json() )
         .then(result => {
-          let date = Object.keys(result)[0];
+          let date = new Date(Object.keys(result)[0] ).toLocaleString('it', dateFormat);
           alert('La scheda del ' + date + ' è stata inserita');
         }
         )

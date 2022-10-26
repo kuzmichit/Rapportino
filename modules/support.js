@@ -60,3 +60,10 @@ export function showError(message) {
     alert('Errore generico prova a rifare più tardi');
   }
 }
+
+export const dateFormat = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  timezone: 'UTC'
+}; 
