@@ -25,7 +25,8 @@ export function btnRegisterFormHandler(currentDate, evt) {
   }
       
   const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
-  debugger;
+
+  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
   putScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
 }
 
@@ -43,6 +44,7 @@ function authWithEmailAndPassword(userData) {
 
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
+    mode: 'cors',
     body: JSON.stringify( {
       email:userData.email,
       password: userData.password,
@@ -54,7 +56,7 @@ function authWithEmailAndPassword(userData) {
   } )
     .then(response => response.json() )
     .then(response => {
-      if(response.error) throw response.error;
+      if(response && response.error) throw response.error;
 
       return response;
     } 
@@ -70,7 +72,7 @@ function authWithEmailAndPassword(userData) {
     );
 }
 
-const putScheduleInDatabase = (userData, dataForSaveInDatabase, currentDate) => {
+const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
   authWithEmailAndPassword(userData)
     .then(idToken => {
       
@@ -93,14 +95,6 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase, currentDate) => 
     } ); 
 };
 
-function getScheduleFromDatabase(email, password) {
-
-  authWithEmailAndPassword('zucca@gmail.com', 123456)
-    .then(idToken => fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/test.json?auth=${idToken}`) )
-    .then(response => response.json() )
-    .then(console.log);
-}
-
 function saveDataInLocalStorage(data, currentDate) {
 
   let rapportino = localStorage.getItem('rapportino');
@@ -111,9 +105,17 @@ function saveDataInLocalStorage(data, currentDate) {
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 } 
 
-function getRapportinoFromLocal() {
-  if(!localStorage.getItem('rapportino') ) localStorage.setItem('rapportino', '{}');
+// function getScheduleFromDatabase(email, password) {
+
+//   authWithEmailAndPassword('zucca@gmail.com', 123456)
+//     .then(idToken => fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/test.json?auth=${idToken}`) )
+//     .then(response => response.json() )
+//     .then(console.log);
+// }
+
+// function getRapportinoFromLocal() {
+//   if(!localStorage.getItem('rapportino') ) localStorage.setItem('rapportino', '{}');
   
-  return localStorage.getItem('rapportino');
-}
+//   return localStorage.getItem('rapportino');
+// }
 
