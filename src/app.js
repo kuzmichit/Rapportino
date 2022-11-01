@@ -1,4 +1,5 @@
-// 'use strict';
+'use strict';
+
 import './css/style.css';
 import './css/calendar.css';
 import './css/reset.css';
