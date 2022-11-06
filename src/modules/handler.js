@@ -52,7 +52,7 @@ export class MainHandler {
     }
     evt.target.classList.add('item_checked');
     
-    let tmpDate = new Date();
+    let tmpDate = new Date(+this.currentDate);
     tmpDate.setDate(evt.target.textContent);
     this.currentDate = tmpDate; 
     console.log(this.currentDate);

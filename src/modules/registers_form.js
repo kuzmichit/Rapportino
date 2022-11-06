@@ -2,13 +2,15 @@ import {isValid, showError, dateFormat} from './support.js';
 import { renderModalSignIn } from './renders.js';
 
 export function btnRegisterFormHandler(currentDate, evt) {
+
   const workForm = evt.target.form,
     building = workForm.building.value,
     description = workForm.description.value,
     userData = JSON.parse(localStorage.getItem('userData') ),        
-    workedHour = workForm.querySelector('.item_checked');
+    workedHours = workForm.querySelector('.item_checked'),
+    dateToView = currentDate.toLocaleString('it', dateFormat) + ' e ore fatte ' + workedHours.textContent;
 
-  if(!workedHour) {
+  if(!workedHours) {
     alert('Scegli le ore effettuate');
 
     return;
@@ -24,14 +26,15 @@ export function btnRegisterFormHandler(currentDate, evt) {
     return;
   }
       
-  const dataForSaveInDatabase = new CreateObjectForDatabase(currentDate, building, description, workedHour.textContent);
+  const dataForSaveInDatabase = new CreateObjectForDatabase(dateToView, building, description, workedHours.textContent);
 
-  saveDataInLocalStorage(dataForSaveInDatabase, currentDate);
-  putScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
+  saveDataInLocalStorage(dataForSaveInDatabase, dateToView);
+  //submitScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
+ //getScheduleFromDatabase(userData);
 }
 
-function CreateObjectForDatabase(currentDate, building, description, workedHour) {
-  this[`${currentDate}`] =
+function CreateObjectForDatabase(dateToView, building, description, workedHour) {
+  this[`${dateToView}`] =
       {
         building,
         description,
@@ -72,7 +75,7 @@ function authWithEmailAndPassword(userData) {
     );
 }
 
-const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
+const submitScheduleInDatabase = (userData, dataForSaveInDatabase) => {
   authWithEmailAndPassword(userData)
     .then(idToken => {
       
@@ -95,23 +98,24 @@ const putScheduleInDatabase = (userData, dataForSaveInDatabase) => {
     } ); 
 };
 
-function saveDataInLocalStorage(data, currentDate) {
+function saveDataInLocalStorage(data, dateToView) {
+  console.log(dateToView);
 
   let rapportino = localStorage.getItem('rapportino');
 
   if (rapportino === null) localStorage.setItem('rapportino', '{}');
   rapportino = JSON.parse(localStorage.getItem('rapportino') );
-  rapportino[currentDate] = data;
+  rapportino[dateToView] = {...data};
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 } 
 
-// function getScheduleFromDatabase(email, password) {
+function getScheduleFromDatabase(userData, currentDate) {
 
-//   authWithEmailAndPassword('zucca@gmail.com', 123456)
-//     .then(idToken => fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/test.json?auth=${idToken}`) )
-//     .then(response => response.json() )
-//     .then(console.log);
-// }
+  authWithEmailAndPassword(userData)
+    .then(idToken => fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`) )
+    .then(response => response.json() )
+    .then(console.log);
+}
 
 // function getRapportinoFromLocal() {
 //   if(!localStorage.getItem('rapportino') ) localStorage.setItem('rapportino', '{}');

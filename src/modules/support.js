@@ -65,5 +65,4 @@ export const dateFormat = {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',
-  timezone: 'UTC'
 }; 
