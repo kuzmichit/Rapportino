@@ -20,16 +20,15 @@ export function btnRegisterFormHandler(currentDate, evt) {
    const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, data);
 
   if(!checkFillField(data)) return;
-
+   
   // controllo se si puo memorizzare la scheda
   if(checkHoursOverflow(rapportino, dateFormatted, data)) { 
 
-      console.log('insert');
-      saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
+      //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
     }
    
-    
-//   //submitScheduleInDatabase(userData, dataForSaveInDatabase, currentDate);
+    let idToken = authWithEmailAndPassword(userData)
+    idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
 //  //getScheduleFromDatabase(userData);
 //   // getRapportinoFromLocal();
 // }
@@ -67,6 +66,7 @@ function authWithEmailAndPassword(userData) {
       return response;
     } 
     )
+    .then(console.log(1111))
     .then(data => {
       return data.idToken
     } )
@@ -80,10 +80,10 @@ function authWithEmailAndPassword(userData) {
     );
 }
 
-const submitScheduleInDatabase = (userData, dataForSaveInDatabase) => {
-  authWithEmailAndPassword(userData)
-    .then(idToken => {
-      
+const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken) => {
+  console.log('first');
+  // authWithEmailAndPassword(userData)
+    //idToken => {      
       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
         {
           method: 'PATCH',
@@ -93,15 +93,16 @@ const submitScheduleInDatabase = (userData, dataForSaveInDatabase) => {
           }
         }
       )
+        .then(console.log(dataForSaveInDatabase))
         .then(response => response.json() )
         .then(result => {
-          let date = new Date(Object.keys(result)[0] ).toLocaleString('it', dateFormat);
-          alert('La scheda del ' + date + ' è stata inserita');
+          // let date = new Date(Object.keys(result)[0] ).toLocaleString('it', dateFormat);
+          alert('La scheda del ' + dateFormatted + ' è stata inserita');
         }
         )
         .catch(error => console.log(error.message) );
-    } ); 
-};
+    }; 
+//};
 
 function saveDataInLocalStorage(data, dateFormatted) {
   let rapportino = JSON.parse(getRapportinoFromLocal())
