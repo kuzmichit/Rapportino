@@ -59,9 +59,14 @@ export class MainHandler {
   }
   //accerchiamento ora
   hour(evt) {
-    evt.preventDefault();
-    for (let day of this.elems.listHour.children) {
-      if(day.classList.contains('item_checked') ) day.classList.remove('item_checked');
+   evt.preventDefault();
+    if(evt.target.classList.contains('item_checked')) {
+      evt.target.classList.toggle('item_checked');
+      return;
+    }
+    //let hourChecked = evt.target;
+    for (let hour of this.elems.listHour.children) {
+         if(hour.classList.contains('item_checked') ) hour.classList.remove('item_checked');
     }
     evt.target.classList.add('item_checked');
 
