@@ -62,29 +62,9 @@ export function showError(message) {
 }
 
 export const dateFormat = {
-  dateStyle: 'short',
-  timeStyle: 'medium'
+  dateStyle: 'long',
+  timeStyle: 'medium',
 }; 
-
-// export function checkHoursOver(rapportino, dateFormatted, workedHours) {
-
-//   console.log('fired');
-//   return true;
-//   // let tmpHours = workedHours;
-//   // let regExp = /7\/11\/2022/;
-
-//   // if(dataToView in rapportino) {    
-//   //   for (let key in rapportino) {
-//   //     //formare regExp
-//   //       if( in rapportino[key]) {
-//   //       tmpHours += +rapportino[key][dataToView]['workedHours'];
-//   //       debugger;
-//   //       }
-//   //   }
-//   // }
-  
-//   // if(tmpHours > 12) alert('E stato superato il limite delle ore' );
-// }
 
 export function getRapportinoFromLocal() {
 

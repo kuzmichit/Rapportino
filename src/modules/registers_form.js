@@ -16,8 +16,7 @@ export function btnRegisterFormHandler(currentDate, evt) {
                   workForm.querySelector('.hour.item_checked').textContent
    }
 
-   console.log(data);
-   const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, data);
+  const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, data);
 
   if(!checkFillField(data)) return;
    
@@ -28,8 +27,8 @@ export function btnRegisterFormHandler(currentDate, evt) {
     }
    
     let idToken = authWithEmailAndPassword(userData)
-    idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
-//  //getScheduleFromDatabase(userData);
+    //idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
+    getScheduleFromDatabase(userData);
 //   // getRapportinoFromLocal();
 // }
 }
@@ -66,7 +65,6 @@ function authWithEmailAndPassword(userData) {
       return response;
     } 
     )
-    .then(console.log(1111))
     .then(data => {
       return data.idToken
     } )
@@ -81,9 +79,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken) => {
-  console.log('first');
-  // authWithEmailAndPassword(userData)
-    //idToken => {      
+     
       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
         {
           method: 'PATCH',
@@ -96,7 +92,7 @@ const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken)
         .then(console.log(dataForSaveInDatabase))
         .then(response => response.json() )
         .then(result => {
-          // let date = new Date(Object.keys(result)[0] ).toLocaleString('it', dateFormat);
+         
           alert('La scheda del ' + dateFormatted + ' è stata inserita');
         }
         )
@@ -118,17 +114,3 @@ function getScheduleFromDatabase(userData, currentDate) {
     .then(response => response.json() )
     .then(console.log);
 }
-
-// function getRapportinoFromLocal() {
-//   let rapportino = JSON.parse(localStorage.getItem('rapportino'));
-//   let regExp = /7\/11\/2022/g; 
-//   let tmpHours = 0;
-  
-//   for (const key in rapportino) {
-//         if(regExp.test(key)) {
-//         let firstKey = Object.keys(rapportino[key] );
-//         tmpHours += +rapportino[key][firstKey]['workedHours'];
-//         console.log( tmpHours);
-//     }
-//   }
-// }
