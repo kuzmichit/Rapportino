@@ -96,19 +96,23 @@ export function checkFillField({workedHours, building, description}) {
     else return true;
   }
 
-function isIncludingCurrentDate(rapportino, dateFormatted) {
-    if(rapportino && rapportino.includes(dateFormatted.slice(0, 8) )) return true;
+function isIncludingCurrentDate(rapportino, dateForCompare) {
+    
+    if(rapportino && JSON.stringify(rapportino).includes(dateForCompare)) return true;
 }
 
 export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
+  debugger;
+  const dateForCompare = dateFormatted.slice(0, (dateFormatted.indexOf(202) + 4))
+  debugger;
 
-  if (!isIncludingCurrentDate(rapportino, dateFormatted)) return true;
+  if (!isIncludingCurrentDate(rapportino, dateForCompare)) return true;
 
-  let rapParsed = JSON.parse(rapportino)
+  let rapParsed = rapportino;
   let tmpHours = +workedHours;
 
     for (let key in rapParsed) {
-        if( key.includes(dateFormatted.slice(0, 8) ) ) {
+        if( key.includes(dateForCompare) ) {
         tmpHours += +rapParsed[key]['workedHours'];
         }
     }

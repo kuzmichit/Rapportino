@@ -6,31 +6,36 @@ export function btnRegisterFormHandler(currentDate, evt) {
   
   const workForm = evt.target.form,
         userData = JSON.parse(localStorage.getItem('userData') ),
-        dateFormatted = currentDate.toLocaleString('it', dateFormat),
-        rapportino = getRapportinoFromLocal();
-  
-    const data = {
+        dateFormatted = currentDate.toLocaleString('it', dateFormat);
+        //rapportino = getRapportinoFromLocal();
+
+    const dataForm = {
     building : workForm.building.value,
     description : workForm.description.value,           
     workedHours : workForm.querySelector('.input__hour').value || workForm.querySelector('.hour.item_checked') && 
                   workForm.querySelector('.hour.item_checked').textContent
    }
 
-  const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, data);
+  const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, dataForm);
 
-  if(!checkFillField(data)) return;
+  if(!checkFillField(dataForm)) return;
    
+  
+  const idToken = authWithEmailAndPassword(userData)
+  idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
+  .then(data =>  { 
+    if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
+      console.log('firres');
+      idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
+      return;
+  } } ) 
+  //   // getRapportinoFromLocal();
+  // }
   // controllo se si puo memorizzare la scheda
-  if(checkHoursOverflow(rapportino, dateFormatted, data)) { 
-
-      //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
-    }
-   
-    let idToken = authWithEmailAndPassword(userData)
-    //idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
-    getScheduleFromDatabase(userData);
-//   // getRapportinoFromLocal();
-// }
+  
+  // if(checkHoursOverflow(rapportino, dateFormatted, dataForm)) { 
+  //   //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
+  // }
 }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
@@ -107,10 +112,15 @@ function saveDataInLocalStorage(data, dateFormatted) {
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 } 
 
-function getScheduleFromDatabase(userData, currentDate) {
+function getScheduleFromDatabase(idToken) {
 
-  authWithEmailAndPassword(userData)
-    .then(idToken => fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`) )
+  return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`)
     .then(response => response.json() )
-    .then(console.log);
+    .catch(error => console.log(error.message) );
+    // .then( data => { return data
+    //   // for( let key in data) {
+    //   //   if(key.includes('14 novembre 2022'))
+    //   //   console.log(data[key]['workedHours']);
+    //   // } 
+    // } )
 }
