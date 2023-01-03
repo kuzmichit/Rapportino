@@ -20,7 +20,6 @@ export function btnRegisterFormHandler(currentDate, evt) {
 
   if(!checkFillField(dataForm)) return;
    
-  
   const idToken = authWithEmailAndPassword(userData)
   idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
   .then(data =>  { 
@@ -29,6 +28,13 @@ export function btnRegisterFormHandler(currentDate, evt) {
       idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
       return;
   } } ) 
+  //   // getRapportinoFromLocal();
+  // }
+  // controllo se si puo memorizzare la scheda
+  
+  // if(checkHoursOverflow(rapportino, dateFormatted, dataForm)) { 
+  //   //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
+  // }
 }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
@@ -115,4 +121,10 @@ function getScheduleFromDatabase(idToken) {
   return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`)
     .then(response => response.json() )
     .catch(error => console.log(error.message) );
+    // .then( data => { return data
+    //   // for( let key in data) {
+    //   //   if(key.includes('14 novembre 2022'))
+    //   //   console.log(data[key]['workedHours']);
+    //   // } 
+    // } )
 }
