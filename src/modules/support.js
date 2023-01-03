@@ -74,15 +74,6 @@ export function getRapportinoFromLocal() {
   return rapportino;
 }
 
-  // for (const key in rapportino) {
-  //       if(regExp.test(key)) {
-  //       let firstKey = Object.keys(rapportino[key] );
-  //       tmpHours += +rapportino[key][firstKey]['workedHours'];
-  //       console.log( tmpHours);
-  //   }
-  // }
-// }
-
 export function checkFillField({workedHours, building, description}) {
     if(!workedHours) {
       return alert('Scegli le ore effettuate');
@@ -102,9 +93,7 @@ function isIncludingCurrentDate(rapportino, dateForCompare) {
 }
 
 export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
-  debugger;
   const dateForCompare = dateFormatted.slice(0, (dateFormatted.indexOf(202) + 4))
-  debugger;
 
   if (!isIncludingCurrentDate(rapportino, dateForCompare)) return true;
 

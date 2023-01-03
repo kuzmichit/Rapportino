@@ -24,18 +24,11 @@ export function btnRegisterFormHandler(currentDate, evt) {
   const idToken = authWithEmailAndPassword(userData)
   idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
   .then(data =>  { 
+    // controllo se si puo memorizzare la scheda
     if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
-      console.log('firres');
       idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
       return;
   } } ) 
-  //   // getRapportinoFromLocal();
-  // }
-  // controllo se si puo memorizzare la scheda
-  
-  // if(checkHoursOverflow(rapportino, dateFormatted, dataForm)) { 
-  //   //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
-  // }
 }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
@@ -63,6 +56,9 @@ function authWithEmailAndPassword(userData) {
       'Content-Type': 'application/json'
     }
   } )
+    .then(response => { 
+      if(response.ok) return response;
+    } )
     .then(response => response.json() )
     .then(response => {
       if(response && response.error) throw response.error;
@@ -84,6 +80,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken) => {
+  
      
       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
         {
@@ -93,17 +90,16 @@ const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken)
             'Content-Type': 'application/json'
           }
         }
-      )
-        .then(console.log(dataForSaveInDatabase))
+      ) 
+        .then(response => { if(response.ok) return response})
         .then(response => response.json() )
-        .then(result => {
+        .then((result) => {
          
-          alert('La scheda del ' + dateFormatted + ' è stata inserita');
+          alert('La scheda del ' + Object.keys(result) + ' è stata inserita' );
         }
         )
         .catch(error => console.log(error.message) );
     }; 
-//};
 
 function saveDataInLocalStorage(data, dateFormatted) {
   let rapportino = JSON.parse(getRapportinoFromLocal())
@@ -112,15 +108,11 @@ function saveDataInLocalStorage(data, dateFormatted) {
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 } 
 
+
 function getScheduleFromDatabase(idToken) {
 
+  idToken
   return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`)
     .then(response => response.json() )
     .catch(error => console.log(error.message) );
-    // .then( data => { return data
-    //   // for( let key in data) {
-    //   //   if(key.includes('14 novembre 2022'))
-    //   //   console.log(data[key]['workedHours']);
-    //   // } 
-    // } )
 }

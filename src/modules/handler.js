@@ -17,7 +17,7 @@ export class MainHandler {
     if (!action) return;
     if(!isObject(this[action[0]] ) ) return;
     this[action[0]](evt);
-    // console.log(action);
+    console.log(action);
   }
 
   calendarHeaderText() {
@@ -79,7 +79,7 @@ export class MainHandler {
 
   //la registrazione della scheda o apertura la finestra Login
   submitButton(evt) {
-    
+      
     if(isUserDataInLocalStorage() ) {
       btnRegisterFormHandler(this.currentDate, evt);
     }
@@ -87,5 +87,9 @@ export class MainHandler {
       evt.target.style.display = 'none';
       renderModalSignIn();
     } 
+  }
+
+  get(evt) {
+    console.log();
   }
 }
