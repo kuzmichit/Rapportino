@@ -94,12 +94,15 @@
   display: flex;
   justify-content: space-between;
   border-radius: 0 0 2% 2%;
+  position: relative;
+  overflow: hidden;
 }
 
 .list__hour {
   display: flex;
-  justify-content: space-evenly;
-  min-width: 90%;
+  width: auto;
+  position: relative;
+  left: -52.5rem;
 }
 
 .edit__hour {
@@ -115,6 +118,7 @@
   color: #fff;
   border: 1px solid transparent;
   font-size: 1.2rem;
+  margin: 0 2.2rem;
 }
 
 /* si nasconde freccette */

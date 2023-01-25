@@ -1,32 +1,41 @@
-import { camellizeClass, isObject, deleteNode, isUserDataInLocalStorage} from './support.js';
+import { camelizeClass as camelizeClass, isObject, deleteNode, isUserDataInLocalStorage} from './support.js';
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
 import {btnRegisterFormHandler} from './registers_form.js';
+import onSliderDown from './carouselHours.js';
 export class MainHandler {
   
-  constructor(date, elems) {
-    this.elems = elems;
-    this.calendar = new CreateCalendar(this.elems.placeToInsert);
+  constructor(date, elements) {
+    ( { month: this.month,
+        elemButtonLeft: this.elemButtonLeft,
+        elemButtonRight: this.elemButtonRight,
+        placeToInsert: this.placeToInsert,
+        targetCurrent: this.targetCurrent,
+        listHour: this.elemListHour,
+        hourContainer: this.elemHourContainer,
+           } = elements)
+    this.calendar = new CreateCalendar(this.placeToInsert);
     this.currentDate = date;
-    this.elems.targetCurrent.addEventListener('pointerdown', this.clickOnHandler.bind(this) );
+    document.addEventListener('pointerdown', this.clickOnHandler.bind(this) );
+    //this.elemHourContainer.addEventListener('pointerdown', () => alert(2222))
     renderDay(date);
   }
 
   clickOnHandler(evt) {
-    let action = camellizeClass(evt.target.className).split(' ');
+    let action = camelizeClass(evt.target.className).split(' ');
     if (!action) return;
     if(!isObject(this[action[0]] ) ) return;
     this[action[0]](evt);
-    console.log(action);
+    console.log(evt.target);
   }
 
   calendarHeaderText() {
-    deleteNode(this.elems.placeToInsert);
-    this.elems.month.classList.toggle('visually-hidden');
-    this.elems.buttonLeft.classList.toggle('hidden');
-    this.elems.buttonRight.classList.toggle('hidden');
+    deleteNode(this.placeToInsert);
+    this.month.classList.toggle('visually-hidden');
+    this.elemButtonLeft.classList.toggle('hidden');
+    this.elemButtonRight.classList.toggle('hidden');
 
-    if (this.elems.month.classList.contains('visually-hidden') ) {
+    if (this.month.classList.contains('visually-hidden') ) {
       this.currentDate = new Date();
       renderDay(this.currentDate);
     }
@@ -35,19 +44,19 @@ export class MainHandler {
   }
 
   buttonRight() {
-    deleteNode(this.elems.placeToInsert);
+    deleteNode(this.placeToInsert);
     this.calendar(this.currentDate.setMonth(this.currentDate.getMonth() + 1) );
     renderDay(null, this.currentDate);
   }
   buttonLeft() {
-    deleteNode(this.elems.placeToInsert);
+    deleteNode(this.placeToInsert);
     this.calendar(this.currentDate.setMonth(this.currentDate.getMonth() - 1) );
     renderDay(null, this.currentDate);
   }
   //accerchiamento giorno
   dayItem(evt) {
     evt.preventDefault();
-    for (let day of this.elems.placeToInsert.children) {
+    for (let day of this.placeToInsert.children) {
       if(day.classList.contains('item_checked') ) day.classList.remove('item_checked');
     }
     evt.target.classList.add('item_checked');
@@ -59,21 +68,25 @@ export class MainHandler {
   }
   //accerchiamento ora
   hour(evt) {
-   evt.preventDefault();
+
+  evt.preventDefault();
+  // this.elemListHour.addEventListener('pointerdown', onSliderDown)
+
+/*
     if(evt.target.classList.contains('item_checked')) {
       evt.target.classList.toggle('item_checked');
       return;
     }
     //let hourChecked = evt.target;
-    for (let hour of this.elems.listHour.children) {
+    for (let hour of this.elemListHour.children) {
          if(hour.classList.contains('item_checked') ) hour.classList.remove('item_checked');
     }
     evt.target.classList.add('item_checked');
 
+    */
   }
-
   editHour() {
-    this.elems.listHour.classList.toggle('visually-hidden');
+    this.elemListHour.classList.toggle('visually-hidden');
     this.elems.inputHour.classList.toggle('visually-hidden');
   }
 
@@ -89,7 +102,11 @@ export class MainHandler {
     } 
   }
 
-  get(evt) {
-    console.log();
+  listHour(e) {
+    onSliderDown(e);
+  }
+
+  hourContainer(e) {
+    console.log(11111);
   }
 }
