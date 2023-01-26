@@ -72,7 +72,7 @@ export class MainHandler {
   evt.preventDefault();
   // this.elemListHour.addEventListener('pointerdown', onSliderDown)
 
-/*
+
     if(evt.target.classList.contains('item_checked')) {
       evt.target.classList.toggle('item_checked');
       return;
@@ -83,7 +83,6 @@ export class MainHandler {
     }
     evt.target.classList.add('item_checked');
 
-    */
   }
   editHour() {
     this.elemListHour.classList.toggle('visually-hidden');
