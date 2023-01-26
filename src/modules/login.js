@@ -1,5 +1,6 @@
-import {validate} from './support.js'
-export function getForm() {
+import { isValid } from './support.js';
+
+export function initLoginForm() {
 
   const formLogin = document.getElementById('login-form');
   let btnGhost = formLogin['btn-ghost'];
@@ -17,13 +18,22 @@ function saveUserDataInSessionStorage(userData) {
 
 function btnLoginHandler() {
 
-  const formLogin = document.getElementById('login-form');
-  let email = formLogin.email.value,
-      password = formLogin.password.value,
-      expForMail = /(^\w+)@(\w+)\.[A-Za-z]{2,3}$/;
-  
-  if(!validate(email, expForMail)) {console.log(1111); return}
-  if(validate(password)) console.log(222);
+  const formLogin = document.getElementById('login-form'),
+    email = formLogin.email.value,
+    password = formLogin.password.value,
+    expForEmail = /(^\w+)@(\w+)\.[A-Za-z]{2,3}$/;
+
+  if(!isValid(email, expForEmail) ) {
+    alert('L\'email non valida');
+
+    return;
+  }
+  if(!isValid(password) ) {
+    alert('La password non valida');
+
+    return;
+  }
+
   let userData = new UserData(email, password);
   saveUserDataInSessionStorage(userData);
   

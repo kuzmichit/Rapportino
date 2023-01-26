@@ -1,3 +1,5 @@
+import { initLoginForm } from './login.js';
+
 const textInHeader = document.querySelector('.calendar-header__text');
 const nameMonths = ['Gennaio', ' Febbraio', ' Marzo', ' Aprile', ' Maggio', ' Giugno', ' Luglio', ' Agosto', ' Settembre', ' Ottobre', ' Novembre', ' Dicembre'];
 
@@ -16,4 +18,6 @@ export function renderModalSignIn() {
   const insertingElem = document.querySelector('.main__container');
   insertingElem.insertAdjacentHTML('afterend', modalSignIn);
   insertingElem.style = 'filter: blur(0.5rem)';
+
+  initLoginForm();
 }

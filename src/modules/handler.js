@@ -1,18 +1,13 @@
 import { camellizeClass, isObject, deleteNode, isUserDataInLocalStorage} from './support.js';
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
-import {onBtnRegisterFormHandler} from './registers_form.js';
-import { getForm } from './login.js';
-
+import {btnRegisterFormHandler} from './registers_form.js';
 export class MainHandler {
   
-  mainContainer=document.querySelector('.main__container');
- 
   constructor(date, elems) {
     this.elems = elems;
     this.calendar = new CreateCalendar(this.elems.placeToInsert);
     this.currentDate = date;
-    // this.currentMonth = date.getMonth();
     this.elems.targetCurrent.addEventListener('pointerdown', this.clickOnHandler.bind(this) );
     renderDay(date);
   }
@@ -30,6 +25,7 @@ export class MainHandler {
     this.elems.month.classList.toggle('visually-hidden');
     this.elems.buttonLeft.classList.toggle('hidden');
     this.elems.buttonRight.classList.toggle('hidden');
+
     if (this.elems.month.classList.contains('visually-hidden') ) {
       this.currentDate = new Date();
       renderDay(this.currentDate);
@@ -55,13 +51,22 @@ export class MainHandler {
       if(day.classList.contains('item_checked') ) day.classList.remove('item_checked');
     }
     evt.target.classList.add('item_checked');
-
+    
+    let tmpDate = new Date(+this.currentDate);
+    tmpDate.setDate(evt.target.textContent);
+    this.currentDate = tmpDate; 
+    console.log(this.currentDate);
   }
   //accerchiamento ora
   hour(evt) {
-    evt.preventDefault();
-    for (let day of this.elems.listHour.children) {
-      if(day.classList.contains('item_checked') ) day.classList.remove('item_checked');
+   evt.preventDefault();
+    if(evt.target.classList.contains('item_checked')) {
+      evt.target.classList.toggle('item_checked');
+      return;
+    }
+    //let hourChecked = evt.target;
+    for (let hour of this.elems.listHour.children) {
+         if(hour.classList.contains('item_checked') ) hour.classList.remove('item_checked');
     }
     evt.target.classList.add('item_checked');
 
@@ -72,16 +77,15 @@ export class MainHandler {
     this.elems.inputHour.classList.toggle('visually-hidden');
   }
 
-  //apertura la finestra Login
+  //la registrazione della scheda o apertura la finestra Login
   submitButton(evt) {
     
     if(isUserDataInLocalStorage() ) {
-      onBtnRegisterFormHandler(this.currentDate, evt);
+      btnRegisterFormHandler(this.currentDate, evt);
     }
     else {
       evt.target.style.display = 'none';
       renderModalSignIn();
-      getForm();
     } 
   }
 }
