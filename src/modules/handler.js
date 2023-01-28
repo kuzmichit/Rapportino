@@ -102,10 +102,12 @@ export class MainHandler {
   }
 
   listHour(e) {
-    onSliderDown(e);
+    if(/Windows/.test(window.navigator.userAgent))  console.log('userAgent');
+    //this.elemHourContainer.addEventListener('touchstart', onSliderDown)
+   
   }
 
   hourContainer(e) {
-    console.log(11111);
+    console.log('hourContainer');
   }
 }

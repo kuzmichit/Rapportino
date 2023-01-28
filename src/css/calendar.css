@@ -100,9 +100,9 @@
 
 .list__hour {
   display: flex;
-  width: auto;
+  width: fit-content;
   position: relative;
-  left: -52.5rem;
+  left: -21.5rem;
 }
 
 .edit__hour {
@@ -144,4 +144,11 @@
   height: 3rem;
   font-size: 2rem;
   margin: 0 auto
+}
+
+@media(max-width: 480px) {
+
+  .list__hour {
+    left: -52.5rem;
+  }
 }
