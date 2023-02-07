@@ -20,12 +20,12 @@
 }
 
 .button__left {
-  border-width: 0.5rem 1rem 0.5rem 0;
+  border-width: 0.75rem 1.5rem 0.75rem 0;
   border-color: transparent #fff transparent transparent;
 }
 
 .button__right {
-  border-width: 0.5rem 0 0.5rem 1rem;
+  border-width: .75rem 0 .75rem 1.5rem;
   border-color: transparent transparent transparent #fff;
 }
 
@@ -102,15 +102,25 @@
   min-width: 90%;
 }
 
+.list__hour-container {
+  overflow: hidden;
+}
+
 .edit__hour {
   margin-left: 0.5rem;
+}
+
+.list__hour-container .hour {
+  margin: 0 1rem;
+  position: relative;
+  left: -5rem;
 }
 
 .hour {
   cursor: pointer;
   text-align: center;
   line-height: 3rem;
-  width: 3rem;
+  min-width: 3rem;
   height: 3rem;
   color: #fff;
   border: 1px solid transparent;
@@ -140,4 +150,10 @@
   height: 3rem;
   font-size: 2rem;
   margin: 0 auto
+}
+
+.hour__btn-left,
+.hour__btn-right {
+  align-self: center;
+  margin: 0 1rem;
 }

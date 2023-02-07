@@ -17,7 +17,7 @@ export class MainHandler {
     if (!action) return;
     if(!isObject(this[action[0]] ) ) return;
     this[action[0]](evt);
-    // console.log(action);
+    console.log(action);
   }
 
   calendarHeaderText() {
