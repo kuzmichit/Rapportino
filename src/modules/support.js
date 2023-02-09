@@ -9,7 +9,8 @@ export const calendarsElements = {
   textArea: calendar.querySelector('#desc'),
   placeToInsert: calendar.querySelector('.list__day'),
   listHour: calendar.querySelector('.list__hour'),
-  inputHour: calendar.querySelector('.input__hour')
+  inputHour: calendar.querySelector('.input__hour'),
+  listHourContainer: calendar.querySelector('.list__hour-container')
 };
 
 export function camellizeClass(nameClass) {

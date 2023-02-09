@@ -44,6 +44,18 @@ export class MainHandler {
     this.calendar(this.currentDate.setMonth(this.currentDate.getMonth() - 1) );
     renderDay(null, this.currentDate);
   }
+  //le frecce per spostare le ore
+  hourBtnLeft(e) {
+    if(this.elems.listHour.getBoundingClientRect().left <= 0 && this.elems.listHour.getBoundingClientRect().left + 150 <= 0) {this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left + 150 + 'px'
+  } else(this.elems.listHour.style.left = 0 + 'px')
+}
+hourBtnRight() {
+  console.log(this.elems.listHour.getBoundingClientRect().left);
+  const leftMax = this.elems.listHourContainer.getBoundingClientRect().width - this.elems.listHour.getBoundingClientRect().width;
+  if(this.elems.listHour.getBoundingClientRect().left >= leftMax &&
+   this.elems.listHour.getBoundingClientRect().left - 300 >= leftMax) { this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left - 300 + 'px'
+} else(this.elems.listHour.style.left = leftMax + 'px')
+ }
   //accerchiamento giorno
   dayItem(evt) {
     evt.preventDefault();
