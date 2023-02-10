@@ -12,7 +12,7 @@ export function btnRegisterFormHandler(currentDate, evt) {
     const dataForm = {
     building : workForm.building.value,
     description : workForm.description.value,           
-    workedHours : workForm.querySelector('.input__hour').value || workForm.querySelector('.hour.item_checked') && 
+    workedHours :  workForm.querySelector('.hour.item_checked') && 
                   workForm.querySelector('.hour.item_checked').textContent
    }
 
@@ -22,20 +22,16 @@ export function btnRegisterFormHandler(currentDate, evt) {
    
   
   const idToken = authWithEmailAndPassword(userData)
-  idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
-  .then(data =>  { 
-    if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
-      console.log('firres');
-      idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
-      return;
-  } } ) 
-  //   // getRapportinoFromLocal();
-  // }
-  // controllo se si puo memorizzare la scheda
+        idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
+        // controllo se si puo memorizzare la scheda
+        .then(data =>  { 
+          if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
+            idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
+            saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
+            return;
+        } } ) 
+
   
-  // if(checkHoursOverflow(rapportino, dateFormatted, dataForm)) { 
-  //   //saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
-  // }
 }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
@@ -53,7 +49,7 @@ function authWithEmailAndPassword(userData) {
 
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
-    mode: 'cors',
+    // mode: 'cors',
     body: JSON.stringify( {
       email:userData.email,
       password: userData.password,

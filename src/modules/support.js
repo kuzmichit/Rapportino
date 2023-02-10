@@ -13,17 +13,17 @@ export const calendarsElements = {
   listHourContainer: calendar.querySelector('.list__hour-container')
 };
 
-export function camellizeClass(nameClass) {
+export function camelizeClass(nameClass) {
   let str = nameClass;
 
   str = str.split('-').join().split(/_{1,2}/).join().split(',');
-  let camellizeStr = str[0];
+  let camelizeStr = str[0];
 
   for (let i = 1; i < str.length; i++) {
-    camellizeStr += (str[i][0].toUpperCase() + str[i].slice(1) );
+    camelizeStr += (str[i][0].toUpperCase() + str[i].slice(1) );
   }
 
-  return camellizeStr;
+  return camelizeStr;
 }
 
 export function deleteNode(collection) {
@@ -75,15 +75,6 @@ export function getRapportinoFromLocal() {
   return rapportino;
 }
 
-  // for (const key in rapportino) {
-  //       if(regExp.test(key)) {
-  //       let firstKey = Object.keys(rapportino[key] );
-  //       tmpHours += +rapportino[key][firstKey]['workedHours'];
-  //       console.log( tmpHours);
-  //   }
-  // }
-// }
-
 export function checkFillField({workedHours, building, description}) {
     if(!workedHours) {
       return alert('Scegli le ore effettuate');
@@ -103,9 +94,8 @@ function isIncludingCurrentDate(rapportino, dateForCompare) {
 }
 
 export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
-  debugger;
+  
   const dateForCompare = dateFormatted.slice(0, (dateFormatted.indexOf(202) + 4))
-  debugger;
 
   if (!isIncludingCurrentDate(rapportino, dateForCompare)) return true;
 
