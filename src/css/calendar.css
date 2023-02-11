@@ -56,8 +56,6 @@
   font-size: 0.8rem;
 }
 
-.day__container {}
-
 .list__day {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -81,8 +79,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.day:focus {}
-
 .day__item_opacity {
   color: rgba(0, 0, 0, 0.3);
 }
@@ -105,12 +101,14 @@
   transition: 0.5s ease-in-out;
 }
 
-.list__hour-container {
-  overflow: hidden;
+@media(min-width: 768px) {
+  .list__hour {
+    left: 0;
+  }
 }
 
-.edit__hour {
-  margin-left: 0.5rem;
+.list__hour-container {
+  overflow: hidden;
 }
 
 .list__hour-container .hour {
@@ -140,17 +138,6 @@
   border-radius: 50%;
   background-color: #7eabc7;
 
-}
-
-/* inserimento manuale dell' ora */
-.input__hour {
-  border-radius: 0.4rem;
-  border: 1px solid #fff;
-  background-color: #7eabc7;
-  width: 5rem;
-  height: 3rem;
-  font-size: 2rem;
-  margin: 0 auto
 }
 
 .hour__btn-left,

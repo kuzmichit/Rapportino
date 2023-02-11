@@ -7,7 +7,6 @@ export function btnRegisterFormHandler(currentDate, evt) {
   const workForm = evt.target.form,
         userData = JSON.parse(localStorage.getItem('userData') ),
         dateFormatted = currentDate.toLocaleString('it', dateFormat);
-        //rapportino = getRapportinoFromLocal();
 
     const dataForm = {
     building : workForm.building.value,
@@ -26,12 +25,11 @@ export function btnRegisterFormHandler(currentDate, evt) {
         // controllo se si puo memorizzare la scheda
         .then(data =>  { 
           if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
-            idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token));
-            saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted);
+            idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token))
+            .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
+            .then(workForm.reset())
             return;
         } } ) 
-
-  
 }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {

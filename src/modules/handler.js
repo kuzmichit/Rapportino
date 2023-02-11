@@ -17,7 +17,7 @@ export class MainHandler {
     if (!action) return;
     if(!isObject(this[action[0]] ) ) return;
     this[action[0]](evt);
-    console.log(action);
+    // console.log(action);
   }
 
   calendarHeaderText() {
@@ -46,11 +46,13 @@ export class MainHandler {
   }
   //le frecce per spostare le ore
   hourBtnLeft(e) {
+    evt.preventDefault();
     if(this.elems.listHour.getBoundingClientRect().left <= 0 && this.elems.listHour.getBoundingClientRect().left + 150 <= 0) {this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left + 150 + 'px'
   } else(this.elems.listHour.style.left = 0 + 'px')
 }
 
   hourBtnRight() {
+    evt.preventDefault();
     const leftMax = this.elems.listHourContainer.getBoundingClientRect().width - this.elems.listHour.getBoundingClientRect().width;
     if(this.elems.listHour.getBoundingClientRect().left >= leftMax &&
     this.elems.listHour.getBoundingClientRect().left - 300 >= leftMax) { this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left - 300 + 'px'
@@ -84,14 +86,9 @@ export class MainHandler {
 
   }
 
-  editHour() {
-    this.elems.listHour.classList.toggle('visually-hidden');
-    this.elems.inputHour.classList.toggle('visually-hidden');
-  }
-
   //la registrazione della scheda o apertura la finestra Login
   submitButton(evt) {
-    
+    // evt.preventDefault();
     if(isUserDataInLocalStorage() ) {
       btnRegisterFormHandler(this.currentDate, evt);
     }

@@ -1,6 +1,6 @@
-const calendar = document.querySelector('.get-data');
+const calendar = document.getElementById('work-data');
 
-export const calendarsElements = {	
+export const calendarsElements = {
   buttonRight: calendar.querySelector('.button__right'),
   buttonLeft: calendar.querySelector('.button__left'),
   targetCurrent: calendar,
@@ -94,10 +94,9 @@ function isIncludingCurrentDate(rapportino, dateForCompare) {
 }
 
 export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
-  
-  const dateForCompare = dateFormatted.slice(0, (dateFormatted.indexOf(202) + 4))
 
-  if (!isIncludingCurrentDate(rapportino, dateForCompare)) return true;
+  const dateForCompare = dateFormatted.slice(0, (dateFormatted.indexOf(202) + 4))
+   if (!isIncludingCurrentDate(rapportino, dateForCompare)) return true;
 
   let rapParsed = rapportino;
   let tmpHours = +workedHours;
