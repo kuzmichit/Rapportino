@@ -1,4 +1,4 @@
-const calendar = document.getElementById('work-data');
+const calendar = document.getElementById('calendar');
 
 export const calendarsElements = {
   buttonRight: calendar.querySelector('.button__right'),
@@ -111,4 +111,9 @@ export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
     return false;
   }
   return true;
+}
+
+export function showModal(msg) {
+  let answer = confirm(msg);
+  return answer;
 }

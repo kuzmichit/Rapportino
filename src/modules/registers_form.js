@@ -1,12 +1,16 @@
-import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow} from './support.js';
+import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow, showModal} from './support.js';
 import { renderModalSignIn } from './renders.js';
+import renderConfirm  from './modal.js';
 
 
 export function btnRegisterFormHandler(currentDate, evt) {
-  
+
   const workForm = evt.target.form,
         userData = JSON.parse(localStorage.getItem('userData') ),
-        dateFormatted = currentDate.toLocaleString('it', dateFormat);
+        dateFormatted = currentDate.toLocaleString('it', dateFormat),
+        currentMonth = currentDate.toLocaleString('it', { month: "long"} );
+  
+ 
 
     const dataForm = {
     building : workForm.building.value,
@@ -16,18 +20,25 @@ export function btnRegisterFormHandler(currentDate, evt) {
    }
 
   const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, dataForm);
-
+  
   if(!checkFillField(dataForm)) return;
-   
+
+  const optionConfirm = {
+    title:"Registrare la scheda?",
+    messageDate: dateFormatted,
+    messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours ,
+    yes:"Yes",
+    no:"NO",
+    } 
   
   const idToken = authWithEmailAndPassword(userData)
-        idToken.then(idToken =>  getScheduleFromDatabase(idToken) )
+        idToken.then(idToken =>  getScheduleFromDatabase(idToken, currentMonth) )
         // controllo se si puo memorizzare la scheda
         .then(data =>  { 
-          if(checkHoursOverflow(data, dateFormatted, dataForm)) { 
-            idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, token))
-            .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
-            .then(workForm.reset())
+          if(checkHoursOverflow(data, dateFormatted, dataForm) )  { renderConfirm(optionConfirm)
+            // idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, token))
+            // .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
+            // .then(workForm.submit() )
             return;
         } } ) 
 }
@@ -77,9 +88,9 @@ function authWithEmailAndPassword(userData) {
     );
 }
 
-const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, idToken) => {
+const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken) => {
      
-      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`,
+      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
         {
           method: 'PATCH',
           body: JSON.stringify(dataForSaveInDatabase),
@@ -106,9 +117,9 @@ function saveDataInLocalStorage(data, dateFormatted) {
   localStorage.setItem('rapportino', JSON.stringify(rapportino) );
 } 
 
-function getScheduleFromDatabase(idToken) {
+function getScheduleFromDatabase(idToken, currentMonth) {
 
-  return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys.json?auth=${idToken}`)
+  return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`)
     .then(response => response.json() )
     .catch(error => console.log(error.message) );
     // .then( data => { return data
