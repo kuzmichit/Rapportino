@@ -113,7 +113,9 @@ export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
   return true;
 }
 
-export function showModal(msg) {
-  let answer = confirm(msg);
-  return answer;
-}
+export  function confirmDialog (msg) {
+  return new Promise((resolve, reject) => {
+    let confirmed = confirm(msg);
+    return confirmed ? resolve(true) : reject(false)
+  })
+  }

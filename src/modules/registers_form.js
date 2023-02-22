@@ -1,6 +1,6 @@
-import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow, showModal} from './support.js';
+import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow} from './support.js';
 import { renderModalSignIn } from './renders.js';
-import renderConfirm  from './modal.js';
+import {confirmDialog, renderConfirm}  from './modal.js';
 
 
 export function btnRegisterFormHandler(currentDate, evt) {
@@ -26,22 +26,26 @@ export function btnRegisterFormHandler(currentDate, evt) {
   const optionConfirm = {
     title:"Registrare la scheda?",
     messageDate: dateFormatted,
-    messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours ,
-    yes:"Yes",
+    messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours,
+    yes:"Si",
     no:"NO",
     } 
   
-  const idToken = authWithEmailAndPassword(userData)
+  const idToken = authWithEmailAndPassword(userData) 
+
         idToken.then(idToken =>  getScheduleFromDatabase(idToken, currentMonth) )
         // controllo se si puo memorizzare la scheda
-        .then(data =>  { 
-          if(checkHoursOverflow(data, dateFormatted, dataForm) )  { renderConfirm(optionConfirm)
-            // idToken.then(token => submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, token))
+        .then(data =>  { if(checkHoursOverflow(data, dateFormatted, dataForm) )  { 
+          return data;
+        } } )
+        
+        .then(res => confirmDialog(optionConfirm) )
+        .then(res => console.log("ssssssssss") )
+          // submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken))
             // .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
             // .then(workForm.submit() )
-            return;
-        } } ) 
-}
+        .catch(err => alert('La scheda non salvata'))
+        }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
 

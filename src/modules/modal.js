@@ -3,20 +3,20 @@
  * @param Object {title,Message,yes,no,yesCallback,noCallback}
  */
 class ConfirmBox {
-  constructor({ ...option }) {
+  constructor({ ...option }, resolve) {
       this.title = option.title || "Confirm";
       this.messageDate = option.messageDate || "Are you sure?";
       this.messageWorkedHour = option.messageWorkedHour || "Are you sure?";
       this.yes = option.yes || "Yes";
       this.no = option.no || 'No';
-      this.yesCallback = option.yesCallback || function () { };
-      this.noCallback = option.noCallback || function () { };
+      this.yesCallback = resolve(true) || function() {};
+      this.noCallback = resolve(false) || function() {};
       this.confirm();
   }
 
   confirm() {
       this.Ui();
-      this.eventHandler();
+      // this.eventHandler();
   }
 
   Ui() {
@@ -30,7 +30,7 @@ class ConfirmBox {
       let modalHeader = document.createElement("div");
       modalHeader.classList.add("confirm-modal-header");
 
-      let modalTitle = document.createElement("h4");
+      let modalTitle = document.createElement("div");
       modalTitle.classList.add("confirm-modal-title");
       modalTitle.innerHTML = this.title;
 
@@ -53,15 +53,14 @@ class ConfirmBox {
       modalNo.classList.add("confirm-modal-no");
       modalNo.innerHTML = this.no;
 
-      let modalClose = document.createElement("div");
-      modalClose.classList.add("confirm-modal-close");
-      modalClose.innerHTML = "&times;";
+    //   let modalClose = document.createElement("div");
+    //   modalClose.classList.add("confirm-modal-close");
+    //   modalClose.innerHTML = "&times;";
       //Append Element to Modal
       modal.appendChild(modalBody);
       modalBody.appendChild(modalHeader);
       modalHeader.appendChild(modalTitle);
-      modalHeader.appendChild(modalClose);
-
+   
       modalBody.appendChild(modalMessageDate);
       modalBody.appendChild(modalMessageWorkedHour);
       modalBody.appendChild(modalFooter);
@@ -69,36 +68,47 @@ class ConfirmBox {
       modalFooter.appendChild(modalNo);
       //Append Modal to Body
       document.body.appendChild(modal);
-      //Append Event Listener to Close Button
-      this.modalClose = modalClose;
+
+      //Append Event Listener to Close Button like BIND
       this.modalYes = modalYes;
       this.modalNo = modalNo;
       this.modal = modal;
   }
 
   //Event And Callback Handler
-  eventHandler() {
-      this.modalClose.addEventListener("click", () => {
-          this.modal.remove();
-      });
-      //Append Event Listener to Yes Button
+  eventHandler(resolve) {
+         //Append Event Listener to Yes Button
       this.modalYes.addEventListener("click", () => {
-          this.yesCallback(this.param);
           this.modal.remove();
+          resolve(true);
+          // this.yesCallback();
       });
       //Append Event Listener to No Button
       this.modalNo.addEventListener("click", () => {
-          this.noCallback(this.param);
+          // this.noCallback();
           this.modal.remove();
+          resolve(false);
       });
   }
 }
+export function renderConfirm(option){
+  let modal = new ConfirmBox(option);
 
-export default function renderConfirm(option){
-
-new ConfirmBox(option)
+  return new Promise( resolve => {
+    modal.eventHandler(resolve);
+  }  )
+//  return new Promise(resolve => { new ConfirmBox(option, resolve) } )
   };
-  
+
+export async function confirmDialog (option) {
+
+    // return new Promise((resolve, reject) => {
+      debugger;
+      renderConfirm(option)
+     if(await renderConfirm() ) console.log('fired');
+        // confirmed ? resolve(true) : reject(false) 
+      // } )
+    }
 
   // title:"Test Confirm Window",
   // message:"Some Details message of Confirmation",
