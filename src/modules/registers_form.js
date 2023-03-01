@@ -1,9 +1,9 @@
 import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow} from './support.js';
 import { renderModalSignIn } from './renders.js';
-import {confirmDialog, renderConfirm}  from './modal.js';
+import asyncConfirm, {confirmDialog}  from './modal.js';
 
 
-export function btnRegisterFormHandler(currentDate, evt) {
+export async function btnRegisterFormHandler(currentDate, evt) {
 
   const workForm = evt.target.form,
         userData = JSON.parse(localStorage.getItem('userData') ),
@@ -27,24 +27,22 @@ export function btnRegisterFormHandler(currentDate, evt) {
     title:"Registrare la scheda?",
     messageDate: dateFormatted,
     messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours,
-    yes:"Si",
-    no:"NO",
-    } 
+  } 
   
-  const idToken = authWithEmailAndPassword(userData) 
+  const idToken = await authWithEmailAndPassword(userData) 
 
-        idToken.then(idToken =>  getScheduleFromDatabase(idToken, currentMonth) )
-        // controllo se si puo memorizzare la scheda
-        .then(data =>  { if(checkHoursOverflow(data, dateFormatted, dataForm) )  { 
-          return data;
+  const currentData = await getScheduleFromDatabase(idToken, currentMonth)
+        //controllo se si puo memorizzare la scheda
+        .then(data =>  { if(checkHoursOverflow(data, dateFormatted, dataForm) )  {
+          
+        renderConfirm(optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm); 
         } } )
         
-        .then(res => confirmDialog(optionConfirm) )
-        .then(res => console.log("ssssssssss") )
+        
+        // idToken.then(res => console.log(res) )
           // submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken))
             // .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
-            // .then(workForm.submit() )
-        .catch(err => alert('La scheda non salvata'))
+        // .catch(err => alert('La scheda non salvata'))
         }
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
@@ -62,7 +60,7 @@ function authWithEmailAndPassword(userData) {
 
   return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
     method: 'POST',
-    // mode: 'cors',
+    mode: 'cors',
     body: JSON.stringify( {
       email:userData.email,
       password: userData.password,
@@ -103,7 +101,6 @@ const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentM
           }
         }
       )
-        .then(console.log(dataForSaveInDatabase))
         .then(response => response.json() )
         .then(result => {
          
@@ -126,10 +123,12 @@ function getScheduleFromDatabase(idToken, currentMonth) {
   return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`)
     .then(response => response.json() )
     .catch(error => console.log(error.message) );
-    // .then( data => { return data
-    //   // for( let key in data) {
-    //   //   if(key.includes('14 novembre 2022'))
-    //   //   console.log(data[key]['workedHours']);
-    //   // } 
-    // } )
-}
+ }
+
+const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
+  console.log(idToken);
+  if (await asyncConfirm(optionConfirm) ) {
+    submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken)
+    workForm.submit(alert('La scheda del ' + dateFormatted + ' è stata inserita'));
+  }
+};
