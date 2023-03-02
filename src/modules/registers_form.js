@@ -101,15 +101,20 @@ const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentM
           }
         }
       )
-        .then(response => response.json() )
-        .then(result => {
-         
+      .then(response => {
+        if(response && response.error) throw response.error;
+  
+        return response;
+        } 
+      )
+   
+      .then(result => {
           alert('La scheda del ' + dateFormatted + ' è stata inserita');
+          console.log(result);
         }
         )
-        .catch(error => console.log(error.message) );
+        .catch(error => alert(error.message) );
     }; 
-//};
 
 function saveDataInLocalStorage(data, dateFormatted) {
   let rapportino = JSON.parse(getRapportinoFromLocal())
@@ -122,13 +127,12 @@ function getScheduleFromDatabase(idToken, currentMonth) {
 
   return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`)
     .then(response => response.json() )
-    .catch(error => console.log(error.message) );
+    .catch(error => alert(error.message) );
  }
 
 const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
-  console.log(idToken);
   if (await asyncConfirm(optionConfirm) ) {
     submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken)
-    workForm.submit(alert('La scheda del ' + dateFormatted + ' è stata inserita'));
+    // workForm.submit(alert('La scheda del ' + dateFormatted + ' è stata inserita'));
   }
 };

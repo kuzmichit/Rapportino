@@ -6,11 +6,12 @@
  */
 class ConfirmBox {
   constructor( {
-    title, messageDate, yes, no, onBtnYes, onBtnNo, 
+    title, messageDate, messageWorkedHour, yes, no, onBtnYes, onBtnNo, 
   } ) {
     this.title = title || 'Confirm';
     this.messageDate = messageDate || 'Are you sure?';
-    this.yes = yes || 'Yes';
+    this.messageWorkedHour = messageWorkedHour || 'Ore fatte'
+    this.yes = yes || 'Si';
     this.no = no || 'No';
     this.onBtnYes = onBtnYes || function () {};
     this.onBtnNo = onBtnNo || function () {};
