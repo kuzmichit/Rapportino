@@ -1,3 +1,4 @@
+import { ConfirmBox } from "./modal";
 const calendar = document.getElementById('calendar');
 
 export const calendarsElements = {
@@ -48,7 +49,7 @@ export function showError(message) {
 
   switch (message) {
   case 'EMAIL_NOT_FOUND':
-    alert('La email non corretta, inserire nuovamente');
+    alert( 'La email non corretta, inserire nuovamente' );
     break;      
   case 'INVALID_PASSWORD':
     alert('La password non corretta, inserire nuovamente');
@@ -58,7 +59,7 @@ export function showError(message) {
     alert('Fatti troppi tentativi, devi riprovare più tardi');
     break;
   default: 
-    alert('Errore generico prova a rifare più tardi');
+  alert('Errore generico prova a rifare più tardi');
   }
 }
 
@@ -77,13 +78,13 @@ export function getRapportinoFromLocal() {
 
 export function checkFillField({workedHours, building, description}) {
     if(!workedHours) {
-      return alert('Scegli le ore effettuate');
+      return showReport(ConfirmBox, {messageBody: 'Scegli le ore effettuate'});
     }
     else if(!isValid(building) ) {
-      return alert('Inserire il nome di cantiere valido');
+      return showReport(ConfirmBox, {messageBody:'Inserire il nome di cantiere valido'} );
     }
     else if(!isValid(description, /(\w|\s){10,}/) ) {
-      return alert('Inserire il lavoro svolto valido');
+      return showReport(ConfirmBox, {messageBody:'Inserire il lavoro svolto valido' } );
     }
     else return true;
   }
@@ -113,9 +114,7 @@ export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
   return true;
 }
 
-export  function confirmDialog (msg) {
-  return new Promise((resolve, reject) => {
-    let confirmed = confirm(msg);
-    return confirmed ? resolve(true) : reject(false)
-  })
-  }
+export function showReport(ConfirmBox, option) {
+  let modal = new ConfirmBox(option);
+  modal.modalNo.remove();
+}

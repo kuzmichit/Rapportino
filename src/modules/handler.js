@@ -8,16 +8,20 @@ export class MainHandler {
     this.elems = elems;
     this.calendar = new CreateCalendar(this.elems.placeToInsert);
     this.currentDate = date;
+    this.btnSubmit = document.getElementById('btnSubmit');
     this.elems.targetCurrent.addEventListener('pointerdown', this.clickOnHandler.bind(this) );
     renderDay(date);
+    this.addSubmit();
   }
-
+  addSubmit() {
+    this.btnSubmit.addEventListener('pointerdown', this.handleSubmit.bind(this) );
+  }
   clickOnHandler(evt) {
     let action = camelizeClass(evt.target.className).split(' ');
     if (!action) return;
     if(!isObject(this[action[0]] ) ) return;
     this[action[0]](evt);
-    console.log(action);
+    // console.log(action);
   }
 
   calendarHeaderText() {
@@ -69,7 +73,6 @@ export class MainHandler {
     let tmpDate = new Date(+this.currentDate);
     tmpDate.setDate(evt.target.textContent);
     this.currentDate = tmpDate; 
-    console.log(this.currentDate);
   }
   //accerchiamento ora
   hour(evt) {
@@ -87,7 +90,8 @@ export class MainHandler {
   }
 
   //la registrazione della scheda o apertura la finestra Login
-  submitButton(evt) {
+  handleSubmit(evt) {
+    this.btnSubmit.disabled = true;
     if(isUserDataInLocalStorage() ) {
       btnRegisterFormHandler(this.currentDate, evt);
     }

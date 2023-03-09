@@ -17,12 +17,13 @@ module.exports = {
     clean: true,
   },
 
-  devtool: 'source-map',
+  devtool: 'eval-cheap-source-map',
   mode,
 
   devServer: {
-    hot: true,
+    hot: false, //!!!
     port: 3000,
+    liveReload: true, // !!!
 
     open: {
       app: {
@@ -50,6 +51,11 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
       },
     ],
   },

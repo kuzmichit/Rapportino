@@ -1,6 +1,6 @@
-import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow} from './support.js';
+import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow, showReport} from './support.js';
 import { renderModalSignIn } from './renders.js';
-import asyncConfirm, {confirmDialog}  from './modal.js';
+import {asyncConfirm, ConfirmBox}  from './modal.js';
 
 
 export async function btnRegisterFormHandler(currentDate, evt) {
@@ -15,7 +15,7 @@ export async function btnRegisterFormHandler(currentDate, evt) {
     const dataForm = {
     building : workForm.building.value,
     description : workForm.description.value,           
-    workedHours :  workForm.querySelector('.hour.item_checked') && 
+    workedHours : workForm.querySelector('.hour.item_checked') && 
                   workForm.querySelector('.hour.item_checked').textContent
    }
 
@@ -25,25 +25,23 @@ export async function btnRegisterFormHandler(currentDate, evt) {
 
   const optionConfirm = {
     title:"Registrare la scheda?",
-    messageDate: dateFormatted,
+    messageBody: dateFormatted,
     messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours,
+    yes: 'Si'
   } 
-  
+  try{
   const idToken = await authWithEmailAndPassword(userData) 
-
+  if(!idToken) return;
+  
   const currentData = await getScheduleFromDatabase(idToken, currentMonth)
         //controllo se si puo memorizzare la scheda
         .then(data =>  { if(checkHoursOverflow(data, dateFormatted, dataForm) )  {
           
         renderConfirm(optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm); 
-        } } )
-        
-        
-        // idToken.then(res => console.log(res) )
-          // submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken))
-            // .then(saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) )
-        // .catch(err => alert('La scheda non salvata'))
-        }
+        } } ) 
+  }      
+  catch(e) { alert('La scheda non salvata') }
+}
 
 function CreateObjectForDatabase(date, {building, description, workedHours}) {
 
@@ -83,37 +81,37 @@ function authWithEmailAndPassword(userData) {
     .catch(error => {
 
       if(400 <= error.code && 500 > error.code) {
-        showError(error.message);
+        showError(error.message, ConfirmBox);
         renderModalSignIn();
       } 
     }
     );
 }
 
-const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken) => {
-     
-      fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
+const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
+       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com//rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
         {
           method: 'PATCH',
           body: JSON.stringify(dataForSaveInDatabase),
+          mode: 'cors',
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
         }
       )
       .then(response => {
-        if(response && response.error) throw response.error;
-  
-        return response;
-        } 
-      )
-   
-      .then(result => {
-          alert('La scheda del ' + dateFormatted + ' è stata inserita');
-          console.log(result);
+        if (!response.ok) {
+          throw new Error();
         }
-        )
-        .catch(error => alert(error.message) );
+        return null;
+        // showReport(ConfirmBox,
+        //     {title: 'Tutto ok', 
+        //     messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita'
+        //     }
+        //     );
+        } )
+      // .then(setTimeout(() => workForm.submit(), 1000) )
+      .catch((e) => showReport(ConfirmBox, {messageBody: e = 'Qualcosa non va, riprova più tardi'  } ) );
     }; 
 
 function saveDataInLocalStorage(data, dateFormatted) {
@@ -130,9 +128,22 @@ function getScheduleFromDatabase(idToken, currentMonth) {
     .catch(error => alert(error.message) );
  }
 
-const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
-  if (await asyncConfirm(optionConfirm) ) {
-    submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken)
-    // workForm.submit(alert('La scheda del ' + dateFormatted + ' è stata inserita'));
+ async function sub(dateFormatted, workForm) {
+  if(await asyncConfirm(
+   {title: 'Tutto ok', 
+   messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
+   remove: (node) => node.remove(),
+   }
+   ) )
+   workForm.submit()
   }
-};
+
+const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
+
+  if (await asyncConfirm(optionConfirm, workForm) ) {
+    submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm)
+    saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) 
+    sub(dateFormatted, workForm);
+  };
+
+}

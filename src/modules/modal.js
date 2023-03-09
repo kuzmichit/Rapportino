@@ -6,15 +6,16 @@
  */
 class ConfirmBox {
   constructor( {
-    title, messageDate, messageWorkedHour, yes, no, onBtnYes, onBtnNo, 
-  } ) {
-    this.title = title || 'Confirm';
-    this.messageDate = messageDate || 'Are you sure?';
-    this.messageWorkedHour = messageWorkedHour || 'Ore fatte'
-    this.yes = yes || 'Si';
+    title, messageBody, messageWorkedHour, yes, no, onBtnYes, onBtnNo, remove 
+  }, onClick ) {
+    this.title = title || 'Errore';
+    this.messageBody = messageBody || 'La scheda  non è stata registrata';
+    this.messageWorkedHour = messageWorkedHour || null;
+    this.yes = yes || 'Ok';
     this.no = no || 'No';
-    this.onBtnYes = onBtnYes || function () {};
-    this.onBtnNo = onBtnNo || function () {};
+    this.remove = remove || function () {};
+    this.onBtnYes = onClick || function () {};
+    this.onBtnNo = onClick || function () {};
     this.Ui();
     this.eventHandler();
   }
@@ -36,7 +37,7 @@ class ConfirmBox {
 
     let modalMessageDate = document.createElement('p');
     modalMessageDate.classList.add('confirm-modal-message');
-    modalMessageDate.textContent = this.messageDate;
+    modalMessageDate.textContent = this.messageBody;
       
     let modalMessageWorkedHour = document.createElement('p');
     modalMessageWorkedHour.classList.add('confirm-modal-message');
@@ -70,7 +71,9 @@ class ConfirmBox {
     this.modalYes = modalYes;
     this.modalNo = modalNo;
     this.modal = modal;
+    this.remove(this.modalNo);
   }
+
 
   // Event And Callback Handler
   eventHandler() {
@@ -78,33 +81,28 @@ class ConfirmBox {
     this.modalYes.addEventListener('click', () => {
       this.onBtnYes(true);
       this.modal.remove(); 
+
     } );
 
     this.modalNo.addEventListener('click', () => {
-      this.onBtnNo(false);
-      this.modal.remove();     
+      this.onBtnNo(false)
+      this.modal.remove();
+      document.getElementById("btnSubmit").disabled=false;
     } );
   }
+
+
 }
 
-const asyncConfirm = (option) => new Promise( (resolve) => {
+const asyncConfirm = (option) => new Promise( resolve => {
+  
   const onClick = (val) => {
-    resolve(val);
+      resolve(val);
   };
 
-  // const options = {
-  //   title: 'Test Confirm Window',
-  //   message: 'Some Details message of Confirmation',
-  //   yes: 'Yes',
-  //   no: 'NO',
-  //   onBtnYes: onClick,
-  //   onBtnNo: onClick,
-  // };
-
-  let modal = new ConfirmBox(option);
-  modal.modalYes.addEventListener('click', onClick)
+  let modal = new ConfirmBox(option, onClick);
 } ); 
 
 
 
-export default asyncConfirm;
+export {asyncConfirm, ConfirmBox};
