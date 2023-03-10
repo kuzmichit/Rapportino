@@ -1,4 +1,4 @@
-import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow, showReport} from './support.js';
+import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, checkHoursOverflow, errorMessage, showReport} from './support.js';
 import { renderModalSignIn } from './renders.js';
 import {asyncConfirm, ConfirmBox}  from './modal.js';
 
@@ -25,7 +25,7 @@ export async function btnRegisterFormHandler(currentDate, evt) {
 
   const optionConfirm = {
     title:"Registrare la scheda?",
-    messageBody: dateFormatted,
+    messageBody: 'Cantiere: ' + dataForm.building,
     messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours,
     yes: 'Si'
   } 
@@ -103,15 +103,9 @@ const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentM
         if (!response.ok) {
           throw new Error();
         }
-        return null;
-        // showReport(ConfirmBox,
-        //     {title: 'Tutto ok', 
-        //     messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita'
-        //     }
-        //     );
+        showReport(dateFormatted, workForm);
         } )
-      // .then(setTimeout(() => workForm.submit(), 1000) )
-      .catch((e) => showReport(ConfirmBox, {messageBody: e = 'Qualcosa non va, riprova più tardi'  } ) );
+         .catch((e) => errorMessage(ConfirmBox, {messageBody: e = 'Qualcosa non va, riprova più tardi'  } ) );
     }; 
 
 function saveDataInLocalStorage(data, dateFormatted) {
@@ -128,22 +122,21 @@ function getScheduleFromDatabase(idToken, currentMonth) {
     .catch(error => alert(error.message) );
  }
 
- async function sub(dateFormatted, workForm) {
-  if(await asyncConfirm(
-   {title: 'Tutto ok', 
-   messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
-   remove: (node) => node.remove(),
-   }
-   ) )
-   workForm.submit()
-  }
+// async function showReport (dateFormatted, workForm) {
+//   if(await asyncConfirm(
+//    {title: 'Tutto ok', 
+//    messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
+//    remove: (node) => node.remove(),
+//    }
+//    ) )
+//    workForm.submit()
+// }
 
 const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
 
   if (await asyncConfirm(optionConfirm, workForm) ) {
     submitScheduleInDatabase(dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm)
     saveDataInLocalStorage(dataForSaveInDatabase, dateFormatted) 
-    sub(dateFormatted, workForm);
   };
 
 }

@@ -1,4 +1,4 @@
-import { ConfirmBox } from "./modal";
+import { ConfirmBox, asyncConfirm } from "./modal";
 const calendar = document.getElementById('calendar');
 
 export const calendarsElements = {
@@ -78,13 +78,13 @@ export function getRapportinoFromLocal() {
 
 export function checkFillField({workedHours, building, description}) {
     if(!workedHours) {
-      return showReport(ConfirmBox, {messageBody: 'Scegli le ore effettuate'});
+      return errorMessage(ConfirmBox, {messageBody: 'Scegli le ore effettuate'});
     }
     else if(!isValid(building) ) {
-      return showReport(ConfirmBox, {messageBody:'Inserire il nome di cantiere valido'} );
+      return errorMessage(ConfirmBox, {messageBody:'Inserire il nome di cantiere valido'} );
     }
     else if(!isValid(description, /(\w|\s){10,}/) ) {
-      return showReport(ConfirmBox, {messageBody:'Inserire il lavoro svolto valido' } );
+      return errorMessage(ConfirmBox, {messageBody:'Inserire il lavoro svolto valido' } );
     }
     else return true;
   }
@@ -114,7 +114,17 @@ export function checkHoursOverflow(rapportino, dateFormatted, {workedHours}) {
   return true;
 }
 
-export function showReport(ConfirmBox, option) {
+export function errorMessage(ConfirmBox, option) {
   let modal = new ConfirmBox(option);
   modal.modalNo.remove();
+}
+
+export async function showReport (dateFormatted, workForm) {
+  if(await asyncConfirm(
+   {title: 'Tutto ok', 
+   messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
+   remove: (node) => node.remove(),
+   }
+   ) )
+   workForm.submit()
 }
