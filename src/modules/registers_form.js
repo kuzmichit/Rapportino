@@ -89,7 +89,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
-       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com//rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
+       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/borys-2023/${currentMonth}.json?auth=${idToken}`,
         {
           method: 'PATCH',
           body: JSON.stringify(dataForSaveInDatabase),
@@ -121,16 +121,6 @@ function getScheduleFromDatabase(idToken, currentMonth) {
     .then(response => response.json() )
     .catch(error => alert(error.message) );
  }
-
-// async function showReport (dateFormatted, workForm) {
-//   if(await asyncConfirm(
-//    {title: 'Tutto ok', 
-//    messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
-//    remove: (node) => node.remove(),
-//    }
-//    ) )
-//    workForm.submit()
-// }
 
 const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
 
