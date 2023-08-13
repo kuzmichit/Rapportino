@@ -122,16 +122,6 @@ function getScheduleFromDatabase(idToken, currentMonth) {
     .catch(error => alert(error.message) );
  }
 
-// async function showReport (dateFormatted, workForm) {
-//   if(await asyncConfirm(
-//    {title: 'Tutto ok', 
-//    messageBody: 'La scheda del ' + dateFormatted + ' è stata inserita',
-//    remove: (node) => node.remove(),
-//    }
-//    ) )
-//    workForm.submit()
-// }
-
 const renderConfirm = async (optionConfirm, dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
 
   if (await asyncConfirm(optionConfirm, workForm) ) {

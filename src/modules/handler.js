@@ -60,7 +60,8 @@ export class MainHandler {
     const leftMax = this.elems.listHourContainer.getBoundingClientRect().width - this.elems.listHour.getBoundingClientRect().width;
     if(this.elems.listHour.getBoundingClientRect().left >= leftMax &&
     this.elems.listHour.getBoundingClientRect().left - 300 >= leftMax) { this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left - 300 + 'px'
-    } else(this.elems.listHour.style.left = leftMax + 'px')
+  } else(this.elems.listHour.style.left = leftMax + 'px')
+  console.log(leftMax, '--leftMax', this.elems.listHour.getBoundingClientRect().left, '---left');
  }
   //accerchiamento giorno
   dayItem(evt) {
