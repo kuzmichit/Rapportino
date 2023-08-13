@@ -32,14 +32,14 @@
 }
 
 .confirm-modal-header .confirm-modal-title {
-  font-size: 1.3rem;
+  font-size: 18px;
   font-weight: 500;
 }
 
 .confirm-modal-message {
-  padding: 0 1rem;
+  padding: 1rem 1rem 0;
   font-size: 1.3rem;
-  line-height: 2rem;
+  /* line-height: 2rem; */
 }
 
 .confirm-modal-footer {
