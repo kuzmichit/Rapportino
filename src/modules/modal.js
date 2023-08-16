@@ -4,6 +4,7 @@
  *  this.title:"Test Confirm Window",
  *  this.yesCallback = resolve(true) || function() {};
  */
+const btnSubmit = document.getElementById('btnSubmit')
 class ConfirmBox {
   constructor( {
     title, messageBody, messageWorkedHour, yes, no, onBtnYes, onBtnNo, remove 
@@ -80,6 +81,7 @@ class ConfirmBox {
     // Append Event Listener to Yes Button
     this.modalYes.addEventListener('click', () => {
       this.onBtnYes(true);
+      btnSubmit.disabled = false;
       this.modal.remove(); 
 
     } );

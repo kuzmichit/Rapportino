@@ -21,7 +21,8 @@ export async function btnRegisterFormHandler(currentDate, evt) {
 
   const dataForSaveInDatabase = new CreateObjectForDatabase(dateFormatted, dataForm);
   
-  if(!checkFillField(dataForm)) return;
+  if(!checkFillField(dataForm)) {
+    return; }
 
   const optionConfirm = {
     title:"Registrare la scheda?",
