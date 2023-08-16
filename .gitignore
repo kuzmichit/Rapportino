@@ -1,11 +1,14 @@
 .vscode/**
 package-lock.json
-package.json
+srpackage.json
 webpack.config.js
+.eslintrc.js
+
 #dev
 webpack.config.js
 .firebaserc
-*firebase*
+firebase.json
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -30,3 +33,4 @@ webpack.config.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
