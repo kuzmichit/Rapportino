@@ -2,28 +2,24 @@ const promise = new Promise((resolve, reject) => {
   resolve('ok');
 } )
 
-promise.then(console.log)
+const _baseURL = 'https://la-sceda-di-lavoro-default-rtdb.firebaseio.com';
+const _pathToResource = 'rapportinoBorys';
+const _URL = _baseURL + _pathToResource;
 
-// const getResourceFromDatabase = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'} ) => {
+const getResourceFromDatabase = async (url = _URL, method = 'GET', body = null, headers = {'Content-Type': 'application/json'} ) => {
 
+  try {
+    const response = await fetch(url, {method, body, headers} );
 
-//   try {
-//     const response = await fetch(url, {method, body, headers} );
+    if (!response) {
+      //throw new Error(`Could not fetch ${url}, status: ${response.status}`);
+    }
 
-//     if (!response.ok) {
-//       throw new Error(`Could not fetch ${url}, status: ${response.status}`);
-//     }
-
-//     const data = await response.json();
-
-//     setLoading(false);
+    const data = await response.json();
     
-//     return data;
-//   }
-//   catch(e) {
-//     setLoading(false);
-//     setError(e.message);
-//     throw e;
-//   }
-// };
-// 
+    return data;
+  }
+  catch(e) {
+    alert(e)
+  }
+};

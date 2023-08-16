@@ -2,7 +2,6 @@ import {checkFillField, isValid, showError, dateFormat, getRapportinoFromLocal, 
 import { renderModalSignIn } from './renders.js';
 import {asyncConfirm, ConfirmBox}  from './modal.js';
 
-
 export async function btnRegisterFormHandler(currentDate, evt) {
 
   const workForm = evt.target.form,
@@ -10,9 +9,7 @@ export async function btnRegisterFormHandler(currentDate, evt) {
         dateFormatted = currentDate.toLocaleString('it', dateFormat),
         currentMonth = currentDate.toLocaleString('it', { month: "long"} );
   
- 
-
-    const dataForm = {
+	const dataForm = {
     building : workForm.building.value,
     description : workForm.description.value,           
     workedHours : workForm.querySelector('.hour.item_checked') && 
@@ -31,8 +28,8 @@ export async function btnRegisterFormHandler(currentDate, evt) {
     yes: 'Si'
   } 
   try{
-  const idToken = await authWithEmailAndPassword(userData) 
-  if(!idToken) return;
+  const idToken = await authWithEmailAndPassword(userData)
+				.then(res =>  { if(res) return } );
   
   const currentData = await getScheduleFromDatabase(idToken, currentMonth)
         //controllo se si puo memorizzare la scheda
