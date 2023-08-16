@@ -2,7 +2,9 @@ import { camelizeClass, isObject, deleteNode, isUserDataInLocalStorage} from './
 import { CreateCalendar } from './calendar.js';
 import { renderDay, renderModalSignIn } from './renders.js';
 import {btnRegisterFormHandler} from './registers_form.js';
+
 export class MainHandler {
+
   
   constructor(date, elems) {
     this.elems = elems;
@@ -58,10 +60,13 @@ export class MainHandler {
   hourBtnRight(e) {
     e.preventDefault();
     const leftMax = this.elems.listHourContainer.getBoundingClientRect().width - this.elems.listHour.getBoundingClientRect().width;
-    if(this.elems.listHour.getBoundingClientRect().left >= leftMax &&
-    this.elems.listHour.getBoundingClientRect().left - 300 >= leftMax) { this.elems.listHour.style.left = this.elems.listHour.getBoundingClientRect().left - 300 + 'px'
-  } else(this.elems.listHour.style.left = leftMax + 'px')
-  console.log(leftMax, '--leftMax', this.elems.listHour.getBoundingClientRect().left, '---left');
+		const listHourStyleLeft = this.elems.listHour.getBoundingClientRect().left - this.elems.listHourContainer.getBoundingClientRect().left;
+    if(listHourStyleLeft >= leftMax && listHourStyleLeft - 150 >= leftMax) { 
+		this.elems.listHour.style.left = listHourStyleLeft - 150 + 'px';
+		console.log(true);
+  } 
+	else(this.elems.listHour.style.left = leftMax + 'px')
+	console.log(leftMax, listHourStyleLeft);
  }
   //accerchiamento giorno
   dayItem(evt) {
