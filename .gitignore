@@ -2,6 +2,10 @@
 package-lock.json
 package.json
 webpack.config.js
+#dev
+webpack.config.js
+.firebaserc
+*firebase*
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
