@@ -6,6 +6,7 @@ webpack.config.js
 firebase.json
 package-lock.json
 package.json
+config.js
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
