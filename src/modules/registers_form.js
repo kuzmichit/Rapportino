@@ -32,10 +32,8 @@ export async function btnRegisterFormHandler(currentDate, evt) {
   }; 
 
   try{
-    // const idToken = 
-
-    await authWithEmailAndPassword(userData)
-      .then(res => { if(res) return; } );
+    const idToken = await authWithEmailAndPassword(userData);
+    // .then(res => { if(res) return; } );
   
     const currentData = await getScheduleFromDatabase(idToken, currentMonth)
     //controllo se si puo memorizzare la scheda
@@ -95,7 +93,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
-  fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com//rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
+  fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
     {
       method: 'PATCH',
       body: JSON.stringify(dataForSaveInDatabase),
