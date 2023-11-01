@@ -23,14 +23,14 @@ export async function btnRegisterFormHandler(currentDate, evt) {
 
   const optionConfirm = {
     title:"Registrare la scheda?",
-    messageBody: 'Cantiere: ' + dataForm.building,
+    messageBuild: 'Cantiere: ' + dataForm.building,
     messageWorkedHour:'Ore effettuate: ' + dataForm.workedHours,
+    messageDate: 'La data: ' + currentDate.toLocaleDateString(),
     yes: 'Si'
   } 
   try{
-  const idToken = await authWithEmailAndPassword(userData)
-				.then(res =>  { if(res) return } );
-  
+  const idToken = await authWithEmailAndPassword(userData);
+	  
   const currentData = await getScheduleFromDatabase(idToken, currentMonth)
         //controllo se si puo memorizzare la scheda
         .then(data =>  { if(checkHoursOverflow(data, dateFormatted, dataForm) )  {
@@ -87,7 +87,7 @@ function authWithEmailAndPassword(userData) {
 }
 
 const submitScheduleInDatabase = (dataForSaveInDatabase, dateFormatted, currentMonth, idToken, workForm) => {
-       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com//rapportinoBorys/${currentMonth}.json?auth=${idToken}`,
+       fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com//borys-2023/${currentMonth}.json?auth=${idToken}`,
         {
           method: 'PATCH',
           body: JSON.stringify(dataForSaveInDatabase),
@@ -115,7 +115,7 @@ function saveDataInLocalStorage(data, dateFormatted) {
 
 function getScheduleFromDatabase(idToken, currentMonth) {
 
-  return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/rapportinoBorys/${currentMonth}.json?auth=${idToken}`)
+  return fetch(`https://la-sceda-di-lavoro-default-rtdb.firebaseio.com/borys-2023/${currentMonth}.json?auth=${idToken}`)
     .then(response => response.json() )
     .catch(error => alert(error.message) );
  }

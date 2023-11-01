@@ -7,11 +7,12 @@
 const btnSubmit = document.getElementById('btnSubmit')
 class ConfirmBox {
   constructor( {
-    title, messageBody, messageWorkedHour, yes, no, onBtnYes, onBtnNo, remove 
+    title, messageBuild, messageWorkedHour, messageDate, yes, no, onBtnYes, onBtnNo, remove 
   }, onClick ) {
     this.title = title || 'Errore';
-    this.messageBody = messageBody || 'La scheda  non è stata registrata';
+    this.messageBuild = messageBuild || 'La scheda  non è stata registrata';
     this.messageWorkedHour = messageWorkedHour || null;
+    this.messageDate = messageDate || null;
     this.yes = yes || 'Ok';
     this.no = no || 'No';
     this.remove = remove || function () {};
@@ -36,13 +37,17 @@ class ConfirmBox {
     modalTitle.classList.add('confirm-modal-title');
     modalTitle.innerHTML = this.title;
 
-    let modalMessageDate = document.createElement('p');
-    modalMessageDate.classList.add('confirm-modal-message');
-    modalMessageDate.textContent = this.messageBody;
+    let modalMessageBuild = document.createElement('p');
+    modalMessageBuild.classList.add('confirm-modal-message');
+    modalMessageBuild.textContent = this.messageBuild;
       
     let modalMessageWorkedHour = document.createElement('p');
     modalMessageWorkedHour.classList.add('confirm-modal-message');
     modalMessageWorkedHour.textContent = this.messageWorkedHour;
+
+    let modalMessageDate = document.createElement('p');
+    modalMessageDate.classList.add('confirm-modal-message');
+    modalMessageDate.textContent = this.messageDate;
 
     let modalFooter = document.createElement('div');
     modalFooter.classList.add('confirm-modal-footer');
@@ -60,8 +65,9 @@ class ConfirmBox {
     modalBody.appendChild(modalHeader);
     modalHeader.appendChild(modalTitle);
    
-    modalBody.appendChild(modalMessageDate);
+    modalBody.appendChild(modalMessageBuild);
     modalBody.appendChild(modalMessageWorkedHour);
+    modalBody.appendChild(modalMessageDate);
     modalBody.appendChild(modalFooter);
     modalFooter.appendChild(modalYes);
     modalFooter.appendChild(modalNo);

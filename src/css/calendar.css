@@ -97,23 +97,23 @@
   justify-content: space-evenly;
   width: fit-content;
   position: relative;
-  left: -36.5rem;
+  left: -12.5rem;
   transition: 0.5s ease-in-out;
 }
 
-@media(min-width: 768px) {
+@media(max-width: 768px) {
   .list__hour {
-    left: -10rem;
+    left: -39rem;
   }
 }
 
 .list__hour-container {
   overflow: hidden;
-	position: relative;
+  position: relative;
 }
 
 .list__hour-container .hour {
-  margin: 0 1rem;
+  margin: 0 0.5rem;
 }
 
 .hour {
